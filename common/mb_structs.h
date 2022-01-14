@@ -33,6 +33,8 @@ struct mb_state{
     float   right_cmd; //right wheel command [-1..1]
 
     //TODO: Add more variables to this state as needed
+    float left_wheel_duty; // left wheel duty cycle range[-1, 1]
+    float right_wheel_duty; // right wheel duty cycle range[-1, 1]
 };
 
 typedef struct mb_setpoints mb_setpoints_t;
@@ -59,5 +61,9 @@ struct pid_parameters {
     float dFilterHz;
     float out_lim;
     float int_lim;
+
+    // customized
+    double prev_error_running_sum;
+    float prev_error;
 };
 #endif
