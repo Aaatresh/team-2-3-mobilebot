@@ -80,7 +80,7 @@ int main(){
 	running = 1;
 
 	float dtime_s = 0.1;
-	fprintf(fp, "Sampling time: %f seconds\n\n", dtime_s);
+	// fprintf(fp, "Sampling time: %f seconds\n\n", dtime_s);
 
     	// Initializing motors
 	rc_motor_init();
