@@ -23,7 +23,7 @@
 #define GEAR_RATIO              78.0  // gear ratio of motor
 #define ENCODER_RES             20.0  // encoder counts per motor shaft revolution
 #define WHEEL_DIAMETER          0.084 // diameter of wheel in meters
-#define WHEEL_BASE              15.875  // wheel separation distance in meters
+#define WHEEL_BASE              0.15875  // wheel separation distance in meters
 #define MAX_FWD_VEL             0.8   // maximum forward speed (m/s)
 #define MAX_TURN_VEL            2.5   // maximum turning speed (rad/s)
 
