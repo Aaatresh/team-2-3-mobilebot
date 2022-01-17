@@ -1,4 +1,8 @@
 #include "../mobilebot/mobilebot.h"
+#include <signal.h>
+#include <rc/motor.h>
+#include <rc/encoder.h>
+#include <rc/encoder_eqep.h>
 
 /*******************************************************************************
 * int mb_initialize()
@@ -161,4 +165,40 @@ int mb_destroy_controller(){
 	rc_encoder_eqep_cleanup();
 
     return 0;
+}
+
+static int running = 0;
+
+static void __signal_handler(__attribute__ ((unused)) int dummy)
+{
+	running = 0;
+	return;
+}
+
+int main()
+{
+	//  Initialize motors and encoders
+	rc_motor_init();
+	rc_encoder_eqep_init();
+
+	mb_initialize_controller();
+
+	signal(SIGINT, __signal_handler);
+	running = 1;
+
+	mb_state_t* mb_state;
+	mb_setpoints_t* mb_setpoints;
+
+	mb_state->left_wheel_duty = 0.25;
+	mb_state->right_wheel_duty = 0.25;
+
+	open_loop_controller(mb_state);
+
+	while(running)
+	{
+	}
+
+	mb_destroy_controller();
+
+	return 0;
 }
