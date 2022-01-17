@@ -24,8 +24,8 @@ struct mb_state{
     float left_velocity;
     float right_velocity;
 
-    float left_wheel_velocity;
-    float right_wheel_velocity;
+    float lw_vel;
+    float rw_vel;
 
     float opti_x;               // Optitrack coordinates 
     float opti_y;               // (if using optitrack for ground truth)
@@ -47,8 +47,8 @@ struct mb_setpoints{
     float turn_velocity; // turn velocity in rad/s
     int manual_ctl;
 
-    float left_wheel_speed;
-    float right_wheel_speed;
+    float lw_vel;
+    float rw_vel;
 };
 
 typedef struct mb_odometry mb_odometry_t;

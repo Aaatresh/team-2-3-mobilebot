@@ -76,32 +76,32 @@ int mb_load_controller_config(){
 int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){  
 
 	// PID for left wheel
-	lw_error = mb_state.lw_vel - mb_setpoints.lw_vel;
-	lw_int_error = lw_pid_params.prev_error_running_sum + lw_error;
-	lw_d_error = lw_error - lw_pid_params.prev_error;
+	float lw_error = mb_state->lw_vel - mb_setpoints->lw_vel;
+	float lw_int_error = lw_pid_params.prev_error_running_sum + lw_error;
+	float lw_d_error = lw_error - lw_pid_params.prev_error;
 	lw_pid_params.prev_error = lw_error;
 
-	lw_correction = (lw_pid_params.kp * lw_error) + (lw_pid_params.ki * lw_int_error) + (lw_pid_params.kd * lw_d_error);
+	float lw_correction = (lw_pid_params.kp * lw_error) + (lw_pid_params.ki * lw_int_error) + (lw_pid_params.kd * lw_d_error);
 
 	// PID for right wheel
-	rw_error = mb_state.rw_vel - mb_setpoints.rw_vel;
-	rw_int_error = rw_pid_params.prev_error_running_sum + rw_error;
-	rw_d_error = rw_error - rw_pid_params.prev_error;
+	float rw_error = mb_state->rw_vel - mb_setpoints->rw_vel;
+	float rw_int_error = rw_pid_params.prev_error_running_sum + rw_error;
+	float rw_d_error = rw_error - rw_pid_params.prev_error;
 	rw_pid_params.prev_error = rw_error;
 
-	rw_correction = (rw_pid_params.kp * rw_error) + (rw_pid_params.ki * rw_int_error) + (rw_pid_params.kd * rw_d_error);
+	float rw_correction = (rw_pid_params.kp * rw_error) + (rw_pid_params.ki * rw_int_error) + (rw_pid_params.kd * rw_d_error);
 
-	mb_state.left_wheel_duty = mb_state.left_wheel_duty + lw_correction;
-	if(mb_state.left_wheel_duty < -lw_pid_params.int_lim)
-		mb_state.left_wheel_duty = -1;
-	else if(mb_state.left_wheel_duty > lw_pid_params.out_lim)
-		mb_state.left_wheel_duty = 1;
+	mb_state->left_wheel_duty = mb_state->left_wheel_duty + lw_correction;
+	if(mb_state->left_wheel_duty < -lw_pid_params.int_lim)
+		mb_state->left_wheel_duty = -1;
+	else if(mb_state->left_wheel_duty > lw_pid_params.out_lim)
+		mb_state->left_wheel_duty = 1;
 
-	mb_state.right_wheel_duty = mb_state.right_wheel_duty - rw_correction;
-	if(mb_state.right_wheel_duty < -rw_pid_params.int_lim)
-		mb_state.right_wheel_duty = -1;
-	else if(mb_state.right_wheel_duty > rw_pid_params.out_lim)
-		mb_state.right_wheel_duty = 1;
+	mb_state->right_wheel_duty = mb_state->right_wheel_duty - rw_correction;
+	if(mb_state->right_wheel_duty < -rw_pid_params.int_lim)
+		mb_state->right_wheel_duty = -1;
+	else if(mb_state->right_wheel_duty > rw_pid_params.out_lim)
+		mb_state->right_wheel_duty = 1;
 
     return 0;
 }
@@ -119,37 +119,37 @@ int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){
 int read_wheel_vels(mb_state_t* mb_state, float dFilterHz)
 {
 	uint64_t lw_ticks = rc_encoder_eqep_read(1);
-	mb_state.left_encoder_delta = lw_ticks - mb_state.left_encoder_total;
-	mb_state.left_encoder_total = lw_ticks;
+	mb_state->left_encoder_delta = lw_ticks - mb_state->left_encoder_total;
+	mb_state->left_encoder_total = lw_ticks;
 
 	uint64_t rw_ticks = rc_encoder_eqep_read(2);
-	mb_state.right_encoder_delta = rw_ticks - mb_state.right_encoder_total;
-	mb_state.right_encoder_total = rw_ticks;
+	mb_state->right_encoder_delta = rw_ticks - mb_state->right_encoder_total;
+	mb_state->right_encoder_total = rw_ticks;
 
-	mb_state.left_wheel_velocity = mb_state.left_wheel_delta / dFilterHz;
-	mb_state.right_wheel_velocity = mb_state.right_wheel_delta / dFilterHz;
+	mb_state->lw_vel = mb_state->left_encoder_delta / dFilterHz;
+	mb_state->rw_vel = mb_state->right_encoder_delta / dFilterHz;
 
 	return 0;
 }
 
 int open_loop_controller(mb_state_t* mb_state)
 {
-	rc_motor_set(1, mb_state.left_wheel_duty);
-	rc_motor_set(2, mb_state.right_wheel_duty);
+	rc_motor_set(1, mb_state->left_wheel_duty);
+	rc_motor_set(2, mb_state->right_wheel_duty);
 
 	return 0;
 }
 
 int pid_controller(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints)
 {
-	rc_motor_set(1, mb_state.left_wheel_duty);
-	rc_motor_set(2, mb_state.right_wheel_duty);
+	rc_motor_set(1, mb_state->left_wheel_duty);
+	rc_motor_set(2, mb_state->right_wheel_duty);
 
-	read_wheel_vels(mb_state);
+	read_wheel_vels(mb_state, lw_pid_params.dFilterHz);
 
 	mb_controller_update(mb_state, mb_setpoints);
 
-	rc_nanosleep(1.0 / pid_parameters.dFilterHz);
+	rc_nanosleep(1.0 / lw_pid_params.dFilterHz);
 
 	return 0;
 }

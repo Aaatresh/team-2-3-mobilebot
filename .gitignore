@@ -16,3 +16,7 @@ python/lcmtypes/*
 .ssh
 .nano
 .cmake
+venv/*
+pyvenv.cfg
+lib/*
+share/*
