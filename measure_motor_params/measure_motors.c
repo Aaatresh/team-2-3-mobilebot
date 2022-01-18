@@ -117,7 +117,7 @@ int main(){
 	while(running){
         
 		
-		for(float i=-1.0; i <= 1.0; i = i + 0.1)
+		for(float i=-1.0; i <= 1.0; i = i + 0.025)
 		{
 
 			test_speed(ch, i, dtime_s, fp);
