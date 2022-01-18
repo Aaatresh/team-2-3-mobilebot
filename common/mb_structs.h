@@ -24,6 +24,9 @@ struct mb_state{
     float left_velocity;
     float right_velocity;
 
+    float lw_vel;
+    float rw_vel;
+
     float opti_x;               // Optitrack coordinates 
     float opti_y;               // (if using optitrack for ground truth)
     float opti_theta;           // Optitrack heading
@@ -33,6 +36,8 @@ struct mb_state{
     float   right_cmd; //right wheel command [-1..1]
 
     //TODO: Add more variables to this state as needed
+    float left_wheel_duty; // left wheel duty cycle range[-1, 1]
+    float right_wheel_duty; // right wheel duty cycle range[-1, 1]
 };
 
 typedef struct mb_setpoints mb_setpoints_t;
@@ -41,6 +46,9 @@ struct mb_setpoints{
     float fwd_velocity; // fwd velocity in m/s
     float turn_velocity; // turn velocity in rad/s
     int manual_ctl;
+
+    float lw_vel;
+    float rw_vel;
 };
 
 typedef struct mb_odometry mb_odometry_t;
@@ -59,5 +67,9 @@ struct pid_parameters {
     float dFilterHz;
     float out_lim;
     float int_lim;
+
+    // customized
+    double prev_error_running_sum;
+    float prev_error;
 };
 #endif

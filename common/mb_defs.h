@@ -47,7 +47,6 @@
     #define GEAR_RATIO              78.0
 #endif
 
-
 // These rates are set to defaults - can be changed
 #define SAMPLE_RATE_HZ          50   // main filter and control loop speed
 #define DT                      0.02  // 1/sample_rate
