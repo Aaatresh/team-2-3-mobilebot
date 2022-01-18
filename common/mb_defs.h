@@ -10,7 +10,7 @@
 #ifndef MB_DEFS_H
 #define MB_DEFS_H
 
-#include "USERDEF.h"
+#include "userdef.h"
 
 
 //#define EXT_CAPE  //for use with the MOBILE ROB CAPE VERSIONS BELOW
@@ -21,46 +21,30 @@
 #define LEFT_MOTOR              1     // id of left motor
 #define RIGHT_MOTOR             2     // id of right motor
 
+// COMMON ROBOT DEFS
+
+#define ENCODER_RES                 20.0
+#define WHEEL_DIAMETER              0.084
+#define WHEEL_BASE                  0.1584
+#define MAX_FWD_VEL                 0.8
+#define MAX_TURN_VEL                2.5
+#define ENCODER_DIR_LEFT            -1
+#define ENCODER_DIR_RIGHT           1
+
 
 
 // USER SPECIFIC CONFIG HERE
+
 #ifdef USER_DEVANSH
-    #define gear_ratio              63.0  // gear ratio of motor
-    #define encoder_res             20.0  // encoder counts per motor shaft revolution
-    #define wheel_diameter          0.084 // diameter of wheel in meters
-    #define wheel_base              0.1584  // wheel separation distance in meters
-    #define max_fwd_vel             0.8   // maximum forwad speed (m/s)
-    #define max_turn_vel            2.5   // maximum turning speed (rad/s)
-    #define encoder_dir_left        -1
-    #define encoder_dir_right       1
-    #define motor_dir_left          1
-    #define motor_dir_right         1
+    #define GEAR_RATIO              63.0  // gear ratio of motor
 #endif
 
 #ifdef USER_SHREYA
-    #define gear_ratio              78.0  // gear ratio of motor
-    #define encoder_res             20.0  // encoder counts per motor shaft revolution
-    #define wheel_diameter          0.084 // diameter of wheel in meters
-    #define wheel_base              0.1584  // wheel separation distance in meters
-    #define max_fwd_vel             0.8   // maximum forwad speed (m/s)
-    #define max_turn_vel            2.5   // maximum turning speed (rad/s)
-    #define encoder_dir_left        -1
-    #define encoder_dir_right       1
-    #define motor_dir_left          1
-    #define motor_dir_right         1
-#endifi
+    #define GEAR_RATIO              78.0  // gear ratio of motor
+#endif
 
 #ifdef USER_ANIRUDH
-    #define gear_ratio              78.0
-    #define encoder_res             20.0  // encoder counts per motor shaft revolution
-    #define wheel_diameter          0.084 // diameter of wheel in meters
-    #define wheel_base              0.1584  // wheel separation distance in meters
-    #define max_fwd_vel             0.8   // maximum forwad speed (m/s)
-    #define max_turn_vel            2.5   // maximum turning speed (rad/s)
-    #define encoder_dir_left        -1
-    #define encoder_dir_right       1
-    #define motor_dir_left          1
-    #define motor_dir_right         1
+    #define GEAR_RATIO              78.0
 #endif
 
 
