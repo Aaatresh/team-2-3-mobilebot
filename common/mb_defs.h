@@ -6,8 +6,12 @@
 *      and your specific configuration...
 * 
 *******************************************************************************/
+
 #ifndef MB_DEFS_H
 #define MB_DEFS_H
+
+#include "userdef.h"
+
 
 //#define EXT_CAPE  //for use with the MOBILE ROB CAPE VERSIONS BELOW
 //#define MRC_VERSION_1v3
@@ -17,15 +21,31 @@
 #define LEFT_MOTOR              1     // id of left motor
 #define RIGHT_MOTOR             2     // id of right motor
 
-// TODO: Add convienient defines to define things like motor and encoder polarity here
+// COMMON ROBOT DEFS
 
-// TODO: Fill in physical propeties of robot
-#define GEAR_RATIO              78.0  // gear ratio of motor
-#define ENCODER_RES             20.0  // encoder counts per motor shaft revolution
-#define WHEEL_DIAMETER          0.084 // diameter of wheel in meters
-#define WHEEL_BASE              0.15875  // wheel separation distance in meters
-#define MAX_FWD_VEL             0.8   // maximum forward speed (m/s)
-#define MAX_TURN_VEL            2.5   // maximum turning speed (rad/s)
+#define ENCODER_RES                 20.0
+#define WHEEL_DIAMETER              0.084
+#define WHEEL_BASE                  0.1584
+#define MAX_FWD_VEL                 0.8
+#define MAX_TURN_VEL                2.5
+#define ENCODER_DIR_LEFT            -1
+#define ENCODER_DIR_RIGHT           1
+
+
+
+// USER SPECIFIC CONFIG HERE
+
+#ifdef USER_DEVANSH
+    #define GEAR_RATIO              63.0  // gear ratio of motor
+#endif
+
+#ifdef USER_SHREYA
+    #define GEAR_RATIO              78.0  // gear ratio of motor
+#endif
+
+#ifdef USER_ANIRUDH
+    #define GEAR_RATIO              78.0
+#endif
 
 // These rates are set to defaults - can be changed
 #define SAMPLE_RATE_HZ          50   // main filter and control loop speed

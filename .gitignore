@@ -20,3 +20,4 @@ venv/*
 pyvenv.cfg
 lib/*
 share/*
+common/userdef.h
