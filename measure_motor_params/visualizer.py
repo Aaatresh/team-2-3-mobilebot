@@ -1,7 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-USER = "DEVANSH"
+with open('../common/userdef.h') as f:
+    if 'DEVANSH' in f.read():
+        USER = "DEVANSH"
+
+    if 'SHREYA' in f.read():
+        USER = "SHREYA"
+
+    if 'ANIRUDH' in f.read():
+        USER = "ANIRUDH"
 
 data = np.genfromtxt("speed_vs_pwm_"+USER+".txt", delimiter = ",")
 
@@ -11,16 +19,16 @@ plt.grid()
 LEFT_DATA = data[:,0] == 1
 RIGHT_DATA = data[:,0] == 2
 
-plt.subplots(121)
-plt.scatter(data[LEFT_DATA, 1], data[RIGHT_DATA, 2], label="LEFT MOTOR")
-plt.legend()
-plt.xlabel("Duty Cycle [%]")
-plt.ylabel("Speed [m/s]")
-plt.subplots(122)
-plt.scatter(data[RIGHT_DATA, 1], data[RIGHT_DATA, 2], label="RIGHT MOTOR")
-plt.legend()
-plt.xlabel("Duty Cycle [%]")
-plt.ylabel("Speed [m/s]")
+fig, axs = plt.subplots(2)
+axs[0].scatter(data[LEFT_DATA, 1], data[RIGHT_DATA, 2], label="LEFT MOTOR")
+axs[0].legend()
+axs[0].set(xlabel= "Duty Cycle [%]")
+axs[0].set(ylabel= "Speed [m/s]")
+# plt.subplots(122)
+axs[1].scatter(data[RIGHT_DATA, 1], data[RIGHT_DATA, 2], label="RIGHT MOTOR")
+axs[1].legend()
+axs[1].set(ylabel="Speed [m/s]")
+axs[1].set(xlabel="Duty Cycle [%]")
 
 # plt.figure()
 # plt.scatter(data[LEFT_DATA, 1], data[LEFT_DATA, 2] - data[RIGHT_DATA, 2], label="LEFT MOTOR")
