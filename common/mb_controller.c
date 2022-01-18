@@ -207,6 +207,7 @@ static void __signal_handler(__attribute__ ((unused)) int dummy)
 	return;
 }
 
+/*
 int main()
 {
 	//  Initialize motors and encoders
@@ -241,3 +242,4 @@ int main()
 
 	return 0;
 }
+*/

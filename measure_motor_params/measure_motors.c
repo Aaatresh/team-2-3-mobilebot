@@ -40,7 +40,7 @@ static void __signal_handler(__attribute__ ((unused)) int dummy)
 *
 *******************************************************************************/
 
-/*
+
 int main(){
 
 	// make sure another instance isn't running
@@ -97,9 +97,14 @@ int main(){
 	// done initializing so set state to RUNNING
 	rc_set_state(RUNNING);
 
+	// Run motor at given speed until speed settles
+	rc_motor_set(1, -0.25);
+	rc_motor_set(2, -0.25);
+	rc_nanosleep(1E9);
+
 	while(running){
 		
-		for(float i=0.0; i <= 1.00; i = i + 0.01)
+		for(float i=-0.25; i <= 0.25; i = i + 0.01)
 		{
 
 			test_speed(i, dtime_s, fp);
@@ -125,7 +130,7 @@ int main(){
 	rc_remove_pid_file();   
 	return 0;
 }
-*/
+
 
 void test_speed(float duty, float dtime_s, FILE *fp){
 	
@@ -136,9 +141,9 @@ void test_speed(float duty, float dtime_s, FILE *fp){
 
 	rc_nanosleep(dtime_s * 1E9);
 
-	long ticks_after = rc_encoder_eqep_read(2);
+	long ticks_after = rc_encoder_eqep_read(1);
 
-	float speed = ((ticks_after - ticks_before) / dtime_s) * enc2meters;
+	float speed = -1 * ((ticks_after - ticks_before) / dtime_s) * enc2meters;
 
 	fprintf(fp, "%f, %f\n", duty, speed);
 
