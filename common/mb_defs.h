@@ -6,8 +6,12 @@
 *      and your specific configuration...
 * 
 *******************************************************************************/
+
 #ifndef MB_DEFS_H
 #define MB_DEFS_H
+
+#include "USERDEF.h"
+
 
 //#define EXT_CAPE  //for use with the MOBILE ROB CAPE VERSIONS BELOW
 //#define MRC_VERSION_1v3
@@ -17,15 +21,48 @@
 #define LEFT_MOTOR              1     // id of left motor
 #define RIGHT_MOTOR             2     // id of right motor
 
-// TODO: Add convienient defines to define things like motor and encoder polarity here
 
-// TODO: Fill in physical propeties of robot
-#define GEAR_RATIO              0.0  // gear ratio of motor
-#define ENCODER_RES             0.0  // encoder counts per motor shaft revolution
-#define WHEEL_DIAMETER          0.0 // diameter of wheel in meters
-#define WHEEL_BASE              0.0  // wheel separation distance in meters
-#define MAX_FWD_VEL             0.8   // maximum forwad speed (m/s)
-#define MAX_TURN_VEL            2.5   // maximum turning speed (rad/s)
+
+// USER SPECIFIC CONFIG HERE
+#ifdef USER_DEVANSH
+    #define gear_ratio              63.0  // gear ratio of motor
+    #define encoder_res             20.0  // encoder counts per motor shaft revolution
+    #define wheel_diameter          0.084 // diameter of wheel in meters
+    #define wheel_base              0.1584  // wheel separation distance in meters
+    #define max_fwd_vel             0.8   // maximum forwad speed (m/s)
+    #define max_turn_vel            2.5   // maximum turning speed (rad/s)
+    #define encoder_dir_left        -1
+    #define encoder_dir_right       1
+    #define motor_dir_left          1
+    #define motor_dir_right         1
+#endif
+
+#ifdef USER_SHREYA
+    #define gear_ratio              78.0  // gear ratio of motor
+    #define encoder_res             20.0  // encoder counts per motor shaft revolution
+    #define wheel_diameter          0.084 // diameter of wheel in meters
+    #define wheel_base              0.1584  // wheel separation distance in meters
+    #define max_fwd_vel             0.8   // maximum forwad speed (m/s)
+    #define max_turn_vel            2.5   // maximum turning speed (rad/s)
+    #define encoder_dir_left        -1
+    #define encoder_dir_right       1
+    #define motor_dir_left          1
+    #define motor_dir_right         1
+#endifi
+
+#ifdef USER_ANIRUDH
+    #define gear_ratio              78.0
+    #define encoder_res             20.0  // encoder counts per motor shaft revolution
+    #define wheel_diameter          0.084 // diameter of wheel in meters
+    #define wheel_base              0.1584  // wheel separation distance in meters
+    #define max_fwd_vel             0.8   // maximum forwad speed (m/s)
+    #define max_turn_vel            2.5   // maximum turning speed (rad/s)
+    #define encoder_dir_left        -1
+    #define encoder_dir_right       1
+    #define motor_dir_left          1
+    #define motor_dir_right         1
+#endif
+
 
 // These rates are set to defaults - can be changed
 #define SAMPLE_RATE_HZ          50   // main filter and control loop speed
