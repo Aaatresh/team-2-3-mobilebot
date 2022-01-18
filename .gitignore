@@ -18,9 +18,5 @@ python/lcmtypes/*
 .cmake
 
 
-<<<<<<< HEAD
 common/userdef.h
 
-=======
-common/USERDEF.h
->>>>>>> 974d8206cc875f4526c6e6068e264b7dbd3e73ac
