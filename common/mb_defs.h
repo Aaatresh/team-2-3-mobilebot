@@ -10,7 +10,6 @@
 #ifndef MB_DEFS_H
 #define MB_DEFS_H
 
-<<<<<<< HEAD
 #include "userdef.h"
 
 
