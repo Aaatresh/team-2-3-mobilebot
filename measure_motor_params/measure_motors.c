@@ -77,22 +77,22 @@ int main(){
    
    	FILE *fp;
     #ifdef USER_DEVANSH 
-	    fp = fopen("speed_vs_pwm_DEVANSH.txt", "w");
+	    fp = fopen("/home/debian/mobilebot/measure_motor_params/speed_vs_pwm_DEVANSH.txt", "w");
     #endif
 
     #ifdef USER_SHREYA
-	    fp = fopen("speed_vs_pwm_SHREYA.txt", "w");
+	    fp = fopen("/home/debian/mobilebot/measure_motor_params/speed_vs_pwm_SHREYA.txt", "w");
     #endif
     
     #ifdef USER_ANIRUDH 
-	    fp = fopen("speed_vs_pwm_ANIRUDH.txt", "w");
+	    fp = fopen("/home/debian/mobilebot/measure_motor_params/speed_vs_pwm_ANIRUDH.txt", "w");
     #endif
 
 	signal(SIGINT, __signal_handler);
     
         running = 1;
 
-	float dtime_s = 0.1;
+	float dtime_s = 0.2;
 	// fprintf(fp, "Sampling time: %f seconds\n\n", dtime_s);
 
     	// Initializing motors
