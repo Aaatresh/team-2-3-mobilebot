@@ -39,6 +39,8 @@ static void __signal_handler(__attribute__ ((unused)) int dummy)
 * int main() 
 *
 *******************************************************************************/
+
+/*
 int main(){
 
 	// make sure another instance isn't running
@@ -123,6 +125,7 @@ int main(){
 	rc_remove_pid_file();   
 	return 0;
 }
+*/
 
 void test_speed(float duty, float dtime_s, FILE *fp){
 	
