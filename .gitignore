@@ -16,3 +16,6 @@ python/lcmtypes/*
 .ssh
 .nano
 .cmake
+
+
+common/USERDEF.h
