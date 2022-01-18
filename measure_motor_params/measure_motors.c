@@ -75,11 +75,22 @@ int main(){
         return -1;
     }
    
-   	FILE *fp; 
-	fp = fopen("speed_vs_pwm.txt", "w");
+   	FILE *fp;
+    #ifdef USER_DEVANSH 
+	    fp = fopen("speed_vs_pwm_DEVANSH.txt", "w");
+    #endif
+
+    #ifdef USER_SHREYA
+	    fp = fopen("speed_vs_pwm_SHREYA.txt", "w");
+    #endif
+    
+    #ifdef USER_ANIRUDH 
+	    fp = fopen("speed_vs_pwm_ANIRUDH.txt", "w");
+    #endif
 
 	signal(SIGINT, __signal_handler);
-	running = 1;
+    
+        running = 1;
 
 	float dtime_s = 0.1;
 	// fprintf(fp, "Sampling time: %f seconds\n\n", dtime_s);
