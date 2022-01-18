@@ -2,13 +2,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 with open('../common/userdef.h') as f:
-    if 'DEVANSH' in f.read():
+
+    txt = f.read()
+    if 'DEVANSH' in txt:
         USER = "DEVANSH"
 
-    if 'SHREYA' in f.read():
+    if 'SHREYA' in txt:
         USER = "SHREYA"
 
-    if 'ANIRUDH' in f.read():
+    if 'ANIRUDH' in txt:
         USER = "ANIRUDH"
 
 data = np.genfromtxt("speed_vs_pwm_"+USER+".txt", delimiter = ",")
