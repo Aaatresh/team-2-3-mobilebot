@@ -53,8 +53,6 @@ int mb_load_controller_config(){
 		    &rw_pid_params.int_lim
 	  );
 
-	printf("rw pid params: %f %f %f\n", lw_pid_params.kp, lw_pid_params.ki, lw_pid_params.kd);
-	printf("rw pid params: %f %f %f\n", lw_pid_params.dFilterHz, lw_pid_params.out_lim, lw_pid_params.int_lim);
 
 /******
 *
@@ -118,16 +116,13 @@ double speed_to_duty_cycle(int ch, double speed){
 
 int mb_controller_update_open_loop(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){  
 
-	// m_forward, b_forward => slope and y-intercept for forward movement
-	// m_backward, b_backward => slope and y-intercept for forward movement
-
-	// mb_state->left_cmd = speed_to_duty_cycle(...);
-	// mb_state->right_cmd = speed_to_duty_cycle(...);
+	mb_state->left_cmd = speed_to_duty_cycle(LEFT_MOTOR, mb_setpoints->fwd_velocity);
+	mb_state->right_cmd = speed_to_duty_cycle(RIGHT_MOTOR, mb_setpoints->fwd_velocity);
 	
-	printf("Inside open loop controller!");
+	//printf("Inside open loop controller!");
 
-	mb_state->left_cmd = 0.25;
-	mb_state->right_cmd = 0.25;
+	// mb_state->left_cmd = 0.25;
+	// mb_state->right_cmd = 0.25;
 
     return 0;
 }

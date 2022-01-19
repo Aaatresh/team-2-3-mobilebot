@@ -214,6 +214,10 @@ void mobilebot_controller(){
     /*  call controller  */
 	mb_controller_update_open_loop(&mb_state, &mb_setpoints);
 
+	// set motors
+	rc_motor_set(LEFT_MOTOR, mb_state.left_cmd);
+	rc_motor_set(RIGHT_MOTOR, mb_state.right_cmd);
+
     publish_mb_msgs();
 
 }
