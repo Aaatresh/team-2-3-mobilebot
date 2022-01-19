@@ -25,12 +25,36 @@ int mb_initialize_controller(){
 *
 *******************************************************************************/
 
+pid_parameters_t lw_pid_params, rw_pid_params;
 
 int mb_load_controller_config(){
     FILE* file = fopen(CFG_PATH, "r");
     if (file == NULL){
         printf("Error opening pid.cfg\n");
     }
+
+    // Read PID parameters for left wheel
+    fscanf(file, "%f %f %f %f %f %f\n",
+		    &lw_pid_params.kp,
+		    &lw_pid_params.ki,
+		    &lw_pid_params.kd,
+		    &lw_pid_params.dFilterHz,
+		    &lw_pid_params.out_lim,
+		    &lw_pid_params.int_lim
+	  );
+
+    // Read PID parameters for right wheel
+    fscanf(file, "%f %f %f %f %f %f",
+		    &rw_pid_params.kp,
+		    &rw_pid_params.ki,
+		    &rw_pid_params.kd,
+		    &rw_pid_params.dFilterHz,
+		    &rw_pid_params.out_lim,
+		    &rw_pid_params.int_lim
+	  );
+
+	printf("rw pid params: %f %f %f\n", lw_pid_params.kp, lw_pid_params.ki, lw_pid_params.kd);
+	printf("rw pid params: %f %f %f\n", lw_pid_params.dFilterHz, lw_pid_params.out_lim, lw_pid_params.int_lim);
 
 /******
 *
@@ -65,8 +89,10 @@ int mb_controller_update_open_loop(mb_state_t* mb_state, mb_setpoints_t* mb_setp
 	// m_forward, b_forward => slope and y-intercept for forward movement
 	// m_backward, b_backward => slope and y-intercept for forward movement
 
-	mb_state->left_cmd = speed_to_duty_cycle(...);
-	mb_state->right_cmd = speed_to_duty_cycle(...);
+	// mb_state->left_cmd = speed_to_duty_cycle(...);
+	// mb_state->right_cmd = speed_to_duty_cycle(...);
+	mb_state->left_cmd = 0.25;
+	mb_state->right_cmd = 0.25;
 
     return 0;
 }
@@ -74,13 +100,13 @@ int mb_controller_update_open_loop(mb_state_t* mb_state, mb_setpoints_t* mb_setp
 int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){  
 
 	// Left wheel PID
-	lw_error = mb_state->left_velocity - mb_setpoints->fwd_velocity;
-	lw_correction = lw_pid_params.kp * lw_error; // plus ki and kd related terms...
+	float lw_error = mb_state->left_velocity - mb_setpoints->fwd_velocity;
+	float lw_correction = lw_pid_params.kp * lw_error; // plus ki and kd related terms...
 	mb_state->left_cmd = mb_state->left_cmd + lw_correction;
 
 	// Right wheel PID
-	rw_error = mb_state->right_velocity - mb_setpoints->fwd_velocity;
-	rw_correction = rw_pid_params.kp * rw_error; // plus ki and kd related terms...
+	float rw_error = mb_state->right_velocity - mb_setpoints->fwd_velocity;
+	float rw_correction = rw_pid_params.kp * rw_error; // plus ki and kd related terms...
 	mb_state->right_cmd = mb_state->right_cmd + rw_correction;
 
 
@@ -88,12 +114,12 @@ int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){
 	if(mb_state->left_cmd < lw_pid_params.int_lim)
 		mb_state->left_cmd = lw_pid_params.int_lim;
 	else if(mb_state->left_cmd > lw_pid_params.out_lim)
-		mb_state->left_cmd = lw_pid_params.out_lim
+		mb_state->left_cmd = lw_pid_params.out_lim;
 
 	if(mb_state->right_cmd < rw_pid_params.int_lim)
 		mb_state->right_cmd = rw_pid_params.int_lim;
 	else if(mb_state->right_cmd > rw_pid_params.out_lim)
-		mb_state->right_cmd = rw_pid_params.out_lim
+		mb_state->right_cmd = rw_pid_params.out_lim;
 
     return 0;
 }
