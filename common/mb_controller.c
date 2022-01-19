@@ -121,6 +121,9 @@ int mb_controller_update_open_loop(mb_state_t* mb_state, mb_setpoints_t* mb_setp
 
 	// mb_state->left_cmd = speed_to_duty_cycle(...);
 	// mb_state->right_cmd = speed_to_duty_cycle(...);
+	
+	printf("Inside open loop controller!");
+
 	mb_state->left_cmd = 0.25;
 	mb_state->right_cmd = 0.25;
 
