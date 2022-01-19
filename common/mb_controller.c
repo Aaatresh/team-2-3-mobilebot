@@ -73,7 +73,7 @@ double speed_to_duty_cycle(int ch, double speed){
    }
 
    if (duty >= 1.0) duty = 1.0;
-   if (duty <= -1.0) duty = 1.0;
+   if (duty <= -1.0) duty = -1.0;
 
    return duty;
 
