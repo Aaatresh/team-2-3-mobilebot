@@ -1,19 +1,7 @@
+from operator import le
 import numpy as np
 import matplotlib.pyplot as plt
-
-# with open('../common/userdef.h') as f:
-
-#     txt = f.read()
-#     if 'DEVANSH' in txt:
-#         USER = "DEVANSH"
-
-#     if 'SHREYA' in txt:
-#         USER = "SHREYA"
-
-#     if 'ANIRUDH' in txt:
-#         USER = "ANIRUDH"
-
-
+import csv
 
 plt.figure()
 
@@ -44,31 +32,89 @@ for USER in ["DEVANSH", "SHREYA", "ANIRUDH"]:
   axs[1].set_aspect(1)
   axs[1].grid()
 
-  # plt.figure()
-  # plt.scatter(data[LEFT_DATA, 1], data[LEFT_DATA, 2] - data[RIGHT_DATA, 2], label="LEFT MOTOR")
-  # plt.scatter(data[RIGHT_DATA, 1], data[RIGHT_DATA, 2], label="RIGHT MOTOR")
-
-  """
-  plt.title("Scatter plot of speed vs pwm data points")
-  plt.xlabel("PWM duty cycle")
-  plt.ylabel("Speed of robot (m/s)")
-  plt.show()
-  """
-
-  # Fitting curve to plotted points
-  # m1, b1 = np.polyfit(data[:21, 0], data[:21, 1], deg=1)
-  # m2, b2 = np.polyfit(data[21:34, 0], data[21:34, 1], deg=1)
-  # m3, b3 = np.polyfit(data[34:, 0], data[34:, 1], deg=1)
-
-  # #plt.figure()
-  # plt.plot(data[:21, 0], m1 * data[:21, 0] + b1, 'k--')
-  # plt.plot(data[21:34, 0], m2 * data[21:34, 0] + b2, 'k--')
-  # plt.plot(data[34:, 0], m3 * data[34:, 0] + b3, 'k--')
-  # plt.title("Curve fit of speed vs pwm data points")
-  # plt.xlabel("PWM duty cycle")
-  # plt.ylabel("Speed of robot (m/s)")
-  # plt.show()
-
 plt.tight_layout()
 plt.savefig("1.1_CALIBRATION_CURVES.pdf")
 
+
+## CALIBRATION 
+
+# fit the positive duty cycles
+
+with open("../common/MOTOR_CALIBRATION.h", 'w', newline="") as csvfile:
+    spamwriter = csv.writer(csvfile, delimiter=',',
+                            quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    spamwriter.writerow("")
+
+for USER in ["DEVANSH", "SHREYA", "ANIRUDH"]:
+
+  data = np.genfromtxt("speed_vs_pwm_"+USER+".txt", delimiter = ",")
+
+  # LEFT POSITIVE calibration 
+  LEFT_POS_INDS = []
+  for i in range(len(data[:,0])):
+    if (data[i,0] == 1) and (data[i,2] >= 0.2):
+      LEFT_POS_INDS.append(i)
+
+  # fit linear
+  m_LEFT_POS, b_LEFT_POS = np.polyfit(data[LEFT_POS_INDS, 2], data[LEFT_POS_INDS, 1], deg=1)
+
+  print(m_LEFT_POS, b_LEFT_POS)
+
+
+  # RIGHT POSITIVE calibration 
+  RIGHT_POS_INDS = []
+  for i in range(len(data[:,0])):
+    if (data[i,0] == 2) and (data[i,2] >= 0.2):
+      RIGHT_POS_INDS.append(i)
+
+  # fit linear
+  m_RIGHT_POS, b_RIGHT_POS = np.polyfit(data[RIGHT_POS_INDS, 2], data[RIGHT_POS_INDS, 1], deg=1)
+  print(m_RIGHT_POS, b_RIGHT_POS)
+
+
+  # LEFT NEG calibration 
+  LEFT_NEG_INDS = []
+  for i in range(len(data[:,0])):
+    if (data[i,0] == 1) and (data[i,2] <= -0.2):
+      LEFT_NEG_INDS.append(i)
+
+  # fit linear
+  m_LEFT_NEG, b_LEFT_NEG = np.polyfit(data[LEFT_NEG_INDS, 2], data[LEFT_NEG_INDS, 1], deg=1)
+  print(m_LEFT_NEG, b_LEFT_NEG)
+
+
+  # RIGHT NEG calibration 
+  RIGHT_NEG_INDS = []
+  for i in range(len(data[:,0])):
+    if (data[i,0] == 2) and (data[i,2] <= -0.2):
+      RIGHT_NEG_INDS.append(i)
+
+  # fit linear
+  m_RIGHT_NEG, b_RIGHT_NEG = np.polyfit(data[RIGHT_NEG_INDS, 2], data[RIGHT_NEG_INDS, 1], deg=1)
+
+  print(m_RIGHT_NEG, b_RIGHT_NEG)
+
+  with open("MOTOR_CALIBRATION_"+USER+".csv", 'w', newline='') as csvfile:
+    spamwriter = csv.writer(csvfile, delimiter=',',
+                            quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    spamwriter.writerow(['CHANNEL', "DIRECTION", "M", "B"])
+    spamwriter.writerow([1, 1, m_LEFT_POS, b_LEFT_POS])
+    spamwriter.writerow([1, -1, m_LEFT_NEG, b_LEFT_NEG])
+    spamwriter.writerow([2, 1, m_RIGHT_POS, b_RIGHT_POS])
+    spamwriter.writerow([2, -1, m_RIGHT_NEG, b_RIGHT_NEG])
+    # spamwriter.writerow(['Spam', 'Lovely Spam', 'Wonderful Spam']) 
+
+  with open("../common/MOTOR_CALIBRATION.h", 'a', newline="") as csvfile:
+    spamwriter = csv.writer(csvfile, delimiter=',',
+                            quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    spamwriter.writerow(["#ifdef USER_"+USER])
+    spamwriter.writerow(["#define MOTOR_CALIB_LEFT_POS_M " + str(m_LEFT_POS)])
+    spamwriter.writerow(["#define MOTOR_CALIB_LEFT_POS_B " + str(b_LEFT_POS)])
+    spamwriter.writerow(["#define MOTOR_CALIB_LEFT_NEG_M " + str(m_LEFT_NEG)])
+    spamwriter.writerow(["#define MOTOR_CALIB_LEFT_NEG_B " + str(b_LEFT_NEG)])
+    spamwriter.writerow(["#define MOTOR_CALIB_RIGHT_POS_M " + str(m_RIGHT_POS)])
+    spamwriter.writerow(["#define MOTOR_CALIB_RIGHT_POS_B " + str(b_RIGHT_POS)])
+    spamwriter.writerow(["#define MOTOR_CALIB_RIGHT_NEG_M " + str(m_RIGHT_NEG)])
+    spamwriter.writerow(["#define MOTOR_CALIB_RIGHT_NEG_B " + str(b_RIGHT_NEG)])
+    spamwriter.writerow(["#endif"])
+    
