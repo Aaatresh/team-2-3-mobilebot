@@ -4,6 +4,7 @@
 
 #include "../mobilebot/mobilebot.h"
 #define CFG_PATH "/home/debian/mobilebot/common/pid.cfg"
+#inclide "MOTOR_CALIBRATION.h"
 
 int mb_initialize_controller();
 int mb_load_controller_config();
