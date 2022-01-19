@@ -145,8 +145,8 @@ void read_mb_sensors(){
     }
 
     // Read encoders    
-    mb_state.left_encoder_delta = rc_encoder_read(LEFT_MOTOR);
-    mb_state.right_encoder_delta = rc_encoder_read(RIGHT_MOTOR);
+    mb_state.left_encoder_delta = ENCODER_DIR_LEFT * rc_encoder_read(LEFT_MOTOR);
+    mb_state.right_encoder_delta = ENCODER_DIR_RIGHT * rc_encoder_read(RIGHT_MOTOR);
     mb_state.left_encoder_total += mb_state.left_encoder_delta;
     mb_state.right_encoder_total += mb_state.right_encoder_delta;
     rc_encoder_write(LEFT_MOTOR,0);
