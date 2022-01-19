@@ -9,6 +9,7 @@
 * 
 *******************************************************************************/
 #include "mobilebot.h"
+#include "../common/mb_controller.h"
 
 /*******************************************************************************
 * int main() 
@@ -209,6 +210,10 @@ void publish_mb_msgs(){
 void mobilebot_controller(){
     update_now();
     read_mb_sensors();
+
+    /*  call controller  */
+	mb_controller_update_open_loop(&mb_state, &mb_setpoints);
+
     publish_mb_msgs();
 
 }

@@ -60,7 +60,41 @@ int mb_load_controller_config(){
 *
 *******************************************************************************/
 
+int mb_controller_update_open_loop(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){  
+
+	// m_forward, b_forward => slope and y-intercept for forward movement
+	// m_backward, b_backward => slope and y-intercept for forward movement
+
+	mb_state->left_cmd = speed_to_duty_cycle(...);
+	mb_state->right_cmd = speed_to_duty_cycle(...);
+
+    return 0;
+}
+
 int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){  
+
+	// Left wheel PID
+	lw_error = mb_state->left_velocity - mb_setpoints->fwd_velocity;
+	lw_correction = lw_pid_params.kp * lw_error; // plus ki and kd related terms...
+	mb_state->left_cmd = mb_state->left_cmd + lw_correction;
+
+	// Right wheel PID
+	rw_error = mb_state->right_velocity - mb_setpoints->fwd_velocity;
+	rw_correction = rw_pid_params.kp * rw_error; // plus ki and kd related terms...
+	mb_state->right_cmd = mb_state->right_cmd + rw_correction;
+
+
+	// Cap max and min values of mb_state->left_cmd and mb_state->right_cmd
+	if(mb_state->left_cmd < lw_pid_params.int_lim)
+		mb_state->left_cmd = lw_pid_params.int_lim;
+	else if(mb_state->left_cmd > lw_pid_params.out_lim)
+		mb_state->left_cmd = lw_pid_params.out_lim
+
+	if(mb_state->right_cmd < rw_pid_params.int_lim)
+		mb_state->right_cmd = rw_pid_params.int_lim;
+	else if(mb_state->right_cmd > rw_pid_params.out_lim)
+		mb_state->right_cmd = rw_pid_params.out_lim
+
     return 0;
 }
 
