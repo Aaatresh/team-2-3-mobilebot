@@ -77,22 +77,24 @@ double speed_to_duty_cycle(int ch, double speed){
 
    if (speed == 0.0) return 0.0;
 
+	 double duty = 0.0;
+
    if (ch == LEFT_MOTOR){
        if (speed > 0){
            
-           double duty = MOTOR_CALIB_LEFT_POS_M * speed + MOTOR_CALIB_LEFT_POS_B;
+          duty = MOTOR_CALIB_LEFT_POS_M * speed + MOTOR_CALIB_LEFT_POS_B;
        }
        else{
-           double duty = MOTOR_CALIB_LEFT_NEG_M * speed + MOTOR_CALIB_LEFT_NEG_B;
+        	duty = MOTOR_CALIB_LEFT_NEG_M * speed + MOTOR_CALIB_LEFT_NEG_B;
        }
    }
 
    if (ch == RIGHT_MOTOR){
        if (speed > 0){
-           double duty = MOTOR_CALIB_RIGHT_POS_M * speed + MOTOR_CALIB_RIGHT_POS_B;
+           duty = MOTOR_CALIB_RIGHT_POS_M * speed + MOTOR_CALIB_RIGHT_POS_B;
        }
        else{
-           double duty =  MOTOR_CALIB_RIGHT_NEG_M * speed + MOTOR_CALIB_RIGHT_NEG_B;
+           duty =  MOTOR_CALIB_RIGHT_NEG_M * speed + MOTOR_CALIB_RIGHT_NEG_B;
        }
    }
 
