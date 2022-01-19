@@ -4,7 +4,7 @@
 
 #include "../mobilebot/mobilebot.h"
 #define CFG_PATH "/home/debian/mobilebot/common/pid.cfg"
-#inclide "MOTOR_CALIBRATION.h"
+#include "MOTOR_CALIBRATION.h"
 
 
 
