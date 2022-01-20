@@ -154,7 +154,10 @@ void update_pid_data(float new_error, pid_data_t* pid_data, pid_parameters_t*pid
 	pid_data -> ierror += new_error;
 
 	// reset integrator error if current error is small
-	if ((new_error < pid_parameters->int_reset) && (new_error > -pid_parameters->int_reset)) pid_data->ierror = 0;
+	if ((new_error < pid_parameters->int_reset) && (new_error > -pid_parameters->int_reset)) {
+        printf("RESETING IERR");
+        pid_data->ierror = 0;
+    }
 	
 	if (pid_data->ierror > pid_parameters->int_lim) pid_data->ierror = pid_parameters->int_lim;
 	if (pid_data->ierror < -pid_parameters->int_lim) pid_data->ierror = -pid_parameters->int_lim;
