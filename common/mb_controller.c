@@ -27,6 +27,8 @@ int mb_initialize_controller(){
 
 pid_parameters_t lw_pid_params, rw_pid_params;
 
+pid_data_t lw_pid_data, rw_pid_data;
+
 int mb_load_controller_config(){
     FILE* file = fopen(CFG_PATH, "r");
     if (file == NULL){
@@ -129,9 +131,8 @@ int mb_controller_convert_setpoints_to_setpointsLR(mb_setpoints_t* mb_setpoints,
 int mb_controller_update_open_loop(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){  
 
 
-    mb_setpoints_LR_t mb_setpoints_LR;
-
-    mb_controller_convert_setpoints_to_setpointsLR(mb_setpoints, &mb_setpoints_LR);
+	mb_setpoints_LR_t mb_setpoints_LR;
+	mb_controller_convert_setpoints_to_setpointsLR(mb_setpoints, &mb_setpoints_LR);
 
 	mb_state->left_cmd = speed_to_duty_cycle(LEFT_MOTOR, mb_setpoints_LR.left_velocity);
 	mb_state->right_cmd = speed_to_duty_cycle(RIGHT_MOTOR, mb_setpoints_LR.right_velocity);
@@ -146,34 +147,70 @@ int mb_controller_update_open_loop(mb_state_t* mb_state, mb_setpoints_t* mb_setp
     return 0;
 }
 
+void update_pid_data(float new_error, pid_data_t* pid_data, pid_parameters_t*pid_parameters){
+
+	pid_data -> ierror += new_error;
+	
+	if (pid_data->ierror > pid_parameters->int_lim) pid_data->ierror = pid_parameters->int_lim;
+	if (pid_data->ierror < -pid_parameters->int_lim) pid_data->ierror = -pid_parameters->int_lim;
+
+	pid_data -> derror = new_error - pid_data-> error;
+	pid_data -> error = new_error;
+
+}
+
+float compute_pid_control(float feedforward, pid_data_t* pid_data, pid_parameters_t*pid_parameters){
+
+	double out = feedforward;
+	out += pid_parameters->kp * pid_data->error;
+	out += pid_parameters->kd * pid_data->derror;
+	out += pid_parameters->ki * pid_data->ierror;
+	return out;
+}
+
 int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){  
 
-	mb_state->left_velocity = mb_state->left_encoder_delta / lw_pid_params.dFilterHz;
-	mb_state->right_velocity = mb_state->right_encoder_delta / rw_pid_params.dFilterHz;
+	mb_setpoints_LR_t mb_setpoints_LR;
+	mb_controller_convert_setpoints_to_setpointsLR(mb_setpoints, &mb_setpoints_LR);
 
-	// Left wheel PID
-	float lw_error = mb_state->left_velocity - mb_setpoints->fwd_velocity;
-	float lw_correction = lw_pid_params.kp * lw_error; // plus ki and kd related terms...
-	mb_state->left_cmd = mb_state->left_cmd + lw_correction;
+	// mb_state->left_velocity = mb_state->left_encoder_delta / lw_pid_params.dFilterHz;
+	// mb_state->right_velocity = mb_state->right_encoder_delta / rw_pid_params.dFilterHz;
 
-	// Right wheel PID
-	float rw_error = mb_state->right_velocity - mb_setpoints->fwd_velocity;
-	float rw_correction = rw_pid_params.kp * rw_error; // plus ki and kd related terms...
-	mb_state->right_cmd = mb_state->right_cmd + rw_correction;
+	// compute errors
+	float lw_error = mb_state->left_velocity - mb_setpoints_LR->left_velocity;
+	float rw_error = mb_state->right_velocity - mb_setpoints_LR->right_velocity;
+
+	// Update the pid data struct
+	update_pid_data(lw_error, &lw_pid_data, &lw_pid_params);
+	update_pid_data(rw_error, &rw_pid_data, &rw_pid_params);
+
+	// compute command
+	float lw_cmd_speed = compute_pid_control(mb_setpoints_LR->left_velocity, &lw_pid_data, &lw_pid_params);
+	float rw_cmd_speed = compute_pid_control(mb_setpoints_LR->right_velocity, &rw_pid_data, &rw_pid_params);
+	
+	// send the command
+	mb_state->left_cmd = speed_to_duty_cycle(LEFT_MOTOR, lw_cmd_speed);
+	mb_state->right_cmd = speed_to_duty_cycle(RIGHT_MOTOR, rw_cmd_speed);
 
 
-	// Cap max and min values of mb_state->left_cmd and mb_state->right_cmd
-	if(mb_state->left_cmd < lw_pid_params.int_lim)
-		mb_state->left_cmd = lw_pid_params.int_lim;
-	else if(mb_state->left_cmd > lw_pid_params.out_lim)
-		mb_state->left_cmd = lw_pid_params.out_lim;
+	// // Right wheel PID
+	
+	// float rw_correction = rw_pid_params.kp * rw_error; // plus ki and kd related terms...
+	// mb_state->right_cmd = mb_state->right_cmd + rw_correction;
 
-	if(mb_state->right_cmd < rw_pid_params.int_lim)
-		mb_state->right_cmd = rw_pid_params.int_lim;
-	else if(mb_state->right_cmd > rw_pid_params.out_lim)
-		mb_state->right_cmd = rw_pid_params.out_lim;
 
-	rc_nanosleep((1.0 / lw_pid_params.dFilterHz) * 1E9);
+	// // Cap max and min values of mb_state->left_cmd and mb_state->right_cmd
+	// if(mb_state->left_cmd < lw_pid_params.int_lim)
+	// 	mb_state->left_cmd = lw_pid_params.int_lim;
+	// else if(mb_state->left_cmd > lw_pid_params.out_lim)
+	// 	mb_state->left_cmd = lw_pid_params.out_lim;
+
+	// if(mb_state->right_cmd < rw_pid_params.int_lim)
+	// 	mb_state->right_cmd = rw_pid_params.int_lim;
+	// else if(mb_state->right_cmd > rw_pid_params.out_lim)
+	// 	mb_state->right_cmd = rw_pid_params.out_lim;
+
+	// rc_nanosleep((1.0 / lw_pid_params.dFilterHz) * 1E9);
 
     return 0;
 }

@@ -68,4 +68,11 @@ struct pid_parameters {
     float out_lim;
     float int_lim;
 };
+
+typedef struct pid_data pid_data_t;
+struct pid_data {
+    float error; // actual error term
+    float derror; // derivative term
+    float ierror; // integral term
+}
 #endif
