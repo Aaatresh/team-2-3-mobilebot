@@ -195,7 +195,7 @@ int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){
 			lw_pid_data.error,
 			lw_pid_data.derror,
 			lw_pid_data.ierror
-			)
+			);
 
 	printf("RPID: des: %f, speed: %f,  err %f, derr: %f, ierr: %f", 
 			mb_setpoints_LR.right_velocity, 
@@ -203,7 +203,7 @@ int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){
 			rw_pid_data.error,
 			rw_pid_data.derror,
 			rw_pid_data.ierror
-			)
+			);
 
 	// compute command
 	float lw_cmd_speed = compute_pid_control(mb_setpoints_LR.left_velocity, &lw_pid_data, &lw_pid_params);
