@@ -11,6 +11,9 @@
 #include "mobilebot.h"
 #include "../common/mb_controller.h"
 
+const float enc2meters = (WHEEL_DIAMETER * M_PI) / (GEAR_RATIO * ENCODER_RES);
+
+
 /*******************************************************************************
 * int main() 
 *
@@ -150,6 +153,12 @@ void read_mb_sensors(){
     mb_state.right_encoder_delta = ENCODER_DIR_RIGHT * rc_encoder_read(RIGHT_MOTOR);
     mb_state.left_encoder_total += mb_state.left_encoder_delta;
     mb_state.right_encoder_total += mb_state.right_encoder_delta;
+
+    // set the left and right wheel velocities
+    mb_state.left_velocity = enc2meters * mb_state.left_encoder_delta / SAMPLE_RATE_HZ;  
+    mb_state.right_velocity = enc2meters * mb_state.right_encoder_delta / SAMPLE_RATE_HZ; 
+    
+    // reset the encoders
     rc_encoder_write(LEFT_MOTOR,0);
     rc_encoder_write(RIGHT_MOTOR,0);
 
@@ -212,10 +221,10 @@ void mobilebot_controller(){
     read_mb_sensors();
 
     /*  call open loop controller  */
-    // mb_controller_update_open_loop(&mb_state, &mb_setpoints);
+    mb_controller_update_open_loop(&mb_state, &mb_setpoints);
 
     /*  call PID controller  */
-    mb_controller_update(&mb_state, &mb_setpoints);
+    //mb_controller_update(&mb_state, &mb_setpoints);
 
 	// set motors
 	rc_motor_set(LEFT_MOTOR, mb_state.left_cmd);

@@ -13,6 +13,8 @@
 #include "userdef.h"
 
 
+#define M_PI 3.14159265358979323846
+
 //#define EXT_CAPE  //for use with the MOBILE ROB CAPE VERSIONS BELOW
 //#define MRC_VERSION_1v3
 //#define MRC_VERSION_2v1
@@ -70,5 +72,7 @@
 
 #define LED_OFF                 1
 #define LED_ON                  0
+
+
 
 #endif

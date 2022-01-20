@@ -129,12 +129,12 @@ int mb_controller_convert_setpoints_to_setpointsLR(mb_setpoints_t * mb_setpoints
 int mb_controller_update_open_loop(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){  
 
 
-    mb_setpoints_LR_t * mb_setpoints_LR;
+    mb_setpoints_LR_t mb_setpoints_LR;
 
-    mb_controller_convert_setpoints_to_setpointsLR(mb_setpoints, mb_setpoints_LR);
+    mb_controller_convert_setpoints_to_setpointsLR(mb_setpoints, &mb_setpoints_LR);
 
-	mb_state->left_cmd = speed_to_duty_cycle(LEFT_MOTOR, mb_setpoints_LR->left_velocity);
-	mb_state->right_cmd = speed_to_duty_cycle(RIGHT_MOTOR, mb_setpoints_LR -> right_velocity);
+	mb_state->left_cmd = speed_to_duty_cycle(LEFT_MOTOR, mb_setpoints_LR.left_velocity);
+	mb_state->right_cmd = speed_to_duty_cycle(RIGHT_MOTOR, mb_setpoints_LR.right_velocity);
 	
 	//printf("Inside open loop controller!");
 
