@@ -177,16 +177,16 @@ int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){
 	// mb_state->right_velocity = mb_state->right_encoder_delta / rw_pid_params.dFilterHz;
 
 	// compute errors
-	float lw_error = mb_state->left_velocity - mb_setpoints_LR->left_velocity;
-	float rw_error = mb_state->right_velocity - mb_setpoints_LR->right_velocity;
+	float lw_error = mb_state->left_velocity - mb_setpoints_LR.left_velocity;
+	float rw_error = mb_state->right_velocity - mb_setpoints_LR.right_velocity;
 
 	// Update the pid data struct
 	update_pid_data(lw_error, &lw_pid_data, &lw_pid_params);
 	update_pid_data(rw_error, &rw_pid_data, &rw_pid_params);
 
 	// compute command
-	float lw_cmd_speed = compute_pid_control(mb_setpoints_LR->left_velocity, &lw_pid_data, &lw_pid_params);
-	float rw_cmd_speed = compute_pid_control(mb_setpoints_LR->right_velocity, &rw_pid_data, &rw_pid_params);
+	float lw_cmd_speed = compute_pid_control(mb_setpoints_LR.left_velocity, &lw_pid_data, &lw_pid_params);
+	float rw_cmd_speed = compute_pid_control(mb_setpoints_LR.right_velocity, &rw_pid_data, &rw_pid_params);
 	
 	// send the command
 	mb_state->left_cmd = speed_to_duty_cycle(LEFT_MOTOR, lw_cmd_speed);

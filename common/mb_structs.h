@@ -74,5 +74,5 @@ struct pid_data {
     float error; // actual error term
     float derror; // derivative term
     float ierror; // integral term
-}
+};
 #endif
