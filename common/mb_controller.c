@@ -129,6 +129,9 @@ int mb_controller_update_open_loop(mb_state_t* mb_state, mb_setpoints_t* mb_setp
 
 int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){  
 
+	mb_state->left_velocity = mb_state->left_encoder_delta / lw_pid_params.dFilterHz;
+	mb_state->right_velocity = mb_state->right_encoder_delta / rw_pid_params.dFilterHz;
+
 	// Left wheel PID
 	float lw_error = mb_state->left_velocity - mb_setpoints->fwd_velocity;
 	float lw_correction = lw_pid_params.kp * lw_error; // plus ki and kd related terms...
@@ -150,6 +153,8 @@ int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){
 		mb_state->right_cmd = rw_pid_params.int_lim;
 	else if(mb_state->right_cmd > rw_pid_params.out_lim)
 		mb_state->right_cmd = rw_pid_params.out_lim;
+
+	rc_nanosleep((1.0 / lw_pid_params.dFilterHz) * 1E9);
 
     return 0;
 }
