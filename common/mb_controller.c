@@ -162,9 +162,9 @@ void update_pid_data(float new_error, pid_data_t* pid_data, pid_parameters_t*pid
 float compute_pid_control(float feedforward, pid_data_t* pid_data, pid_parameters_t*pid_parameters){
 
 	double out = feedforward;
-	out += pid_parameters->kp * pid_data->error;
-	out += pid_parameters->kd * pid_data->derror;
-	out += pid_parameters->ki * pid_data->ierror;
+	out += -pid_parameters->kp * pid_data->error;
+	out += -pid_parameters->kd * pid_data->derror;
+	out += -pid_parameters->ki * pid_data->ierror;
 
 	if (out > pid_parameters->out_lim) out = pid_parameters->out_lim;
 	if (out < -pid_parameters->out_lim) out = -pid_parameters->out_lim;
