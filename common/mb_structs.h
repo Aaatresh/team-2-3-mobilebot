@@ -43,6 +43,14 @@ struct mb_setpoints{
     int manual_ctl;
 };
 
+typedef struct mb_setpoints_LR mb_setpoints_LR_t;
+struct mb_setpoints_LR{
+
+    float left_velocity;
+    float right_velocity;
+
+};
+
 typedef struct mb_odometry mb_odometry_t;
 struct mb_odometry{
 

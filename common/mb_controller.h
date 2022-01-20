@@ -10,6 +10,7 @@
 
 int mb_initialize_controller();
 int mb_load_controller_config();
+int mb_controller_setpoints_to_setpoints_LR(mb_setpoints_t*, mb_setpoints_LR_t*);
 int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints);
 int mb_destroy_controller();
 double speed_to_duty_cycle(int ch, double speed);
