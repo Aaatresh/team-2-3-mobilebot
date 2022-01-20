@@ -36,23 +36,25 @@ int mb_load_controller_config(){
     }
 
     // Read PID parameters for left wheel
-    fscanf(file, "%f %f %f %f %f %f\n",
+    fscanf(file, "%f %f %f %f %f %f %f\n",
 		    &lw_pid_params.kp,
 		    &lw_pid_params.ki,
 		    &lw_pid_params.kd,
 		    &lw_pid_params.dFilterHz,
 		    &lw_pid_params.out_lim,
-		    &lw_pid_params.int_lim
+		    &lw_pid_params.int_lim, 
+				&lw_pid_params.int_reset
 	  );
 
     // Read PID parameters for right wheel
-    fscanf(file, "%f %f %f %f %f %f",
+    fscanf(file, "%f %f %f %f %f %f %f",
 		    &rw_pid_params.kp,
 		    &rw_pid_params.ki,
 		    &rw_pid_params.kd,
 		    &rw_pid_params.dFilterHz,
 		    &rw_pid_params.out_lim,
-		    &rw_pid_params.int_lim
+		    &rw_pid_params.int_lim,
+				&lw_pid_params.int_reset
 	  );
 
 
@@ -150,6 +152,9 @@ int mb_controller_update_open_loop(mb_state_t* mb_state, mb_setpoints_t* mb_setp
 void update_pid_data(float new_error, pid_data_t* pid_data, pid_parameters_t*pid_parameters){
 
 	pid_data -> ierror += new_error;
+
+	// reset integrator error if current error is small
+	if ((new_error < pid_parameters->int_reset) && (new_error > -pid_parameters->int_reset)) pid_data->ierror = 0;
 	
 	if (pid_data->ierror > pid_parameters->int_lim) pid_data->ierror = pid_parameters->int_lim;
 	if (pid_data->ierror < -pid_parameters->int_lim) pid_data->ierror = -pid_parameters->int_lim;

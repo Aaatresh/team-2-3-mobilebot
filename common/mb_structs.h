@@ -67,6 +67,7 @@ struct pid_parameters {
     float dFilterHz;
     float out_lim;
     float int_lim;
+    float int_reset;
 };
 
 typedef struct pid_data pid_data_t;
