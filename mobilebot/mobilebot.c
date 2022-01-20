@@ -155,8 +155,8 @@ void read_mb_sensors(){
     mb_state.right_encoder_total += mb_state.right_encoder_delta;
 
     // set the left and right wheel velocities
-    mb_state.left_velocity = enc2meters * mb_state.left_encoder_delta / SAMPLE_RATE_HZ;  
-    mb_state.right_velocity = enc2meters * mb_state.right_encoder_delta / SAMPLE_RATE_HZ; 
+    mb_state.left_velocity = enc2meters * mb_state.left_encoder_delta * SAMPLE_RATE_HZ;  
+    mb_state.right_velocity = enc2meters * mb_state.right_encoder_delta * SAMPLE_RATE_HZ; 
     
     // reset the encoders
     rc_encoder_write(LEFT_MOTOR,0);
