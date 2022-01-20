@@ -23,6 +23,7 @@ for USER in ["DEVANSH", "SHREYA", "ANIRUDH"]:
   axs[0].set_title("LEFT_MOTOR")
   axs[0].set_aspect(1)
   axs[0].grid()
+  axs[0].set(xlim=(-0.2,0.2))
   # plt.subplots(122)
   axs[1].plot(data[RIGHT_DATA, 1], data[RIGHT_DATA, 2], label=USER)#, marker="x")
   axs[1].legend()
@@ -31,6 +32,7 @@ for USER in ["DEVANSH", "SHREYA", "ANIRUDH"]:
   axs[1].set_title("RIGHT_MOTOR")
   axs[1].set_aspect(1)
   axs[1].grid()
+
 
 plt.tight_layout()
 plt.savefig("1.1_CALIBRATION_CURVES.pdf")
@@ -102,8 +104,8 @@ for USER in ["DEVANSH", "SHREYA", "ANIRUDH"]:
   LEFT_DATA = data[:,0] == 1
   RIGHT_DATA = data[:,0] == 2
 
-  speeds_pos = np.linspace(0, 1.5, 100)
-  speeds_neg = np.linspace(-1.5, 0, 100)
+  speeds_pos = np.linspace(0, 1.2, 100)
+  speeds_neg = np.linspace(-1.2, 0, 100)
   
 
   
