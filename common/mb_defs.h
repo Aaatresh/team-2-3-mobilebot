@@ -34,7 +34,6 @@
 #define ENCODER_DIR_RIGHT           1
 
 
-
 // USER SPECIFIC CONFIG HERE
 
 #ifdef USER_DEVANSH
@@ -51,7 +50,7 @@
 
 // These rates are set to defaults - can be changed
 #define SAMPLE_RATE_HZ          50   // main filter and control loop speed
-#define DT                      0.02  // 1/sample_rate
+#define DT                      1.0 / SAMPLE_RATE_HZ  // 1/sample_rate
 #define PRINTF_HZ               1    // rate of print loop
 #define RC_CTL_HZ               25   // main filter and control loop speed
 #define LCM_HZ                  100    // rate of LCM subscribe
@@ -73,6 +72,7 @@
 #define LED_OFF                 1
 #define LED_ON                  0
 
-
+// Defs for Odometry
+#define DELTA_THETA_THRESH	    0.0021 * SAMPLE_RATE_HZ // (in radians) from the paper (https://drive.google.com/drive/u/1/folders/1yehnW33KBXUHgPebyMbHwfje5KGyXxdj)
 
 #endif
