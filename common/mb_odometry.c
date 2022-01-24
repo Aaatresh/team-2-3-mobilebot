@@ -36,6 +36,8 @@ void mb_initialize_odometry(mb_odometry_t* mb_odometry, float x, float y, float 
 *******************************************************************************/
 void mb_update_odometry(mb_odometry_t* mb_odometry, mb_state_t* mb_state){
 
+	float enc2meters = (WHEEL_DIAMETER * M_PI) / (GEAR_RATIO * ENCODER_RES);
+
 	float delta_s_left = mb_state->left_encoder_delta * enc2meters;
 	float delta_s_right = mb_state->right_encoder_delta * enc2meters;
 

@@ -11,7 +11,7 @@
 #include "mobilebot.h"
 #include "../common/mb_controller.h"
 
-const float enc2meters = (WHEEL_DIAMETER * M_PI) / (GEAR_RATIO * ENCODER_RES);
+ const float enc2meters = (WHEEL_DIAMETER * M_PI) / (GEAR_RATIO * ENCODER_RES);
 
 
 /*******************************************************************************
