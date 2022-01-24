@@ -19,6 +19,11 @@
 *
 *******************************************************************************/
 void mb_initialize_odometry(mb_odometry_t* mb_odometry, float x, float y, float theta){
+	
+	mb_odometry->x = x;
+	mb_odometry->y = y;
+	mb_odometry->theta = theta;
+	
 }
 
 
@@ -30,6 +35,20 @@ void mb_initialize_odometry(mb_odometry_t* mb_odometry, float x, float y, float 
 *
 *******************************************************************************/
 void mb_update_odometry(mb_odometry_t* mb_odometry, mb_state_t* mb_state){
+
+	float delta_s_left = mb_state->left_encoder_delta * enc2meters;
+	float delta_s_right = mb_state->right_encoder_delta * enc2meters;
+
+	float delta_theta = (delta_s_right - delta_s_left) / WHEEL_BASE;
+
+	float delta_s = (delta_s_left + delta_s_right) / 2;
+
+	float delta_x = delta_s * cos(mb_odometry->theta + (delta_theta / 2.0));
+	float delta_y = delta_s * sin(mb_odometry->theta + (delta_theta / 2.0));
+
+	mb_odometry->x = mb_odometry->x + delta_x;
+	mb_odometry->y = mb_odometry->y + delta_y;
+	mb_odometry->theta = mb_clamp_radians(mb_odometry->theta + delta_theta);
 }
 
 

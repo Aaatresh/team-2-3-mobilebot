@@ -62,6 +62,7 @@ void publish_mb_msgs();
 void cleanup_threads();
 void led_heartbeat();
 
+const float enc2meters = (WHEEL_DIAMETER * M_PI) / (GEAR_RATIO * ENCODER_RES);
 
 //LCM handler functions
 void motor_command_handler(const lcm_recv_buf_t *rbuf, 
