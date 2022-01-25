@@ -8,7 +8,7 @@
 #include "../mobilebot/mobilebot.h"
 #include "mb_defs.h"
 #include <math.h>
-
+#include <rc/mpu.h>
 #define PI 3.14159265358979323846
 
 
@@ -19,8 +19,9 @@
 * NOTE: you should initialize from Optitrack data if available
 *
 *******************************************************************************/
+
 void mb_initialize_odometry(mb_odometry_t* mb_odometry, float x, float y, float theta){
-	
+
 	mb_odometry->x = x;
 	mb_odometry->y = y;
 	mb_odometry->theta = theta;
@@ -46,14 +47,13 @@ void mb_update_odometry(mb_odometry_t* mb_odometry, mb_state_t* mb_state){
 
 	float delta_theta = 0.0;
 
-	rc_mpu_data_t data;
 	rc_mpu_read_gyro(&data);	
-	float delta_theta_gyro = data.gyro[2];
+	float delta_theta_gyro = data.dmp_TaitBryan[TB_YAW_Z];
 	float delta_G_O = mb_angle_diff_radians(delta_theta_gyro, delta_theta_odo);
 
 	// printf("DGO: %f\tTHRESH: %f\n", delta_G_O, DELTA_THETA_THRESH);
 	
-	printf("gyro theta: %f\todometry theta: %f\n")
+	printf("gyro theta: %f\todometry theta: %f\n", delta_theta_gyro, delta_theta_odo);
 
 	if(abs(delta_G_O) > DELTA_THETA_THRESH && (delta_s_left != 0 || delta_s_right != 0))
 		delta_theta = delta_theta_gyro * DT;
