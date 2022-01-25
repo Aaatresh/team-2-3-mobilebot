@@ -139,7 +139,7 @@ int mb_controller_update_open_loop(mb_state_t* mb_state, mb_setpoints_t* mb_setp
 	mb_state->left_cmd = speed_to_duty_cycle(LEFT_MOTOR, mb_setpoints_LR.left_velocity);
 	mb_state->right_cmd = speed_to_duty_cycle(RIGHT_MOTOR, mb_setpoints_LR.right_velocity);
 
-	printf("pwm: %f\t vel: %f", mb_state->left_cmd, mb_setpoints_LR.left_velocity);
+	// 
 
 	//printf("Inside open loop controller!");
 
@@ -156,7 +156,7 @@ void update_pid_data(float new_error, pid_data_t* pid_data, pid_parameters_t*pid
 	// reset integrator error if current error is small
 	/*
 	if ((new_error < pid_parameters->int_reset) && (new_error > -pid_parameters->int_reset)) {
-        printf("RESETING IERR");
+        // printf("RESETING IERR");
         pid_data->ierror = 0;
     }
 	*/
@@ -206,15 +206,15 @@ int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){
 			lw_pid_data.ierror
 			);
     */
-    
-	printf("RPID: des: %f, speed: %f,  err %f, derr: %f, ierr: %f\n", 
+
+	/*printf("RPID: des: %f, speed: %f,  err %f, derr: %f, ierr: %f\n", 
 			mb_setpoints_LR.right_velocity, 
 			mb_state->right_velocity,
 			rw_pid_data.error,
 			rw_pid_data.derror,
 			rw_pid_data.ierror
 			);
-    
+    */
 	// compute command
 	float lw_cmd_speed = compute_pid_control(mb_setpoints_LR.left_velocity, &lw_pid_data, &lw_pid_params);
 	float rw_cmd_speed = compute_pid_control(mb_setpoints_LR.right_velocity, &rw_pid_data, &rw_pid_params);
