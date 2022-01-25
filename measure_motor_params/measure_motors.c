@@ -23,7 +23,7 @@
 #include <signal.h>
 
 
-float enc2meters = (WHEEL_DIAMETER * M_PI) / (GEAR_RATIO * ENCODER_RES);
+const  float enc2meters = (WHEEL_DIAMETER * M_PI) / (GEAR_RATIO * ENCODER_RES);
 
 void test_speed(int ch, float du, float dtime_s, FILE *fp);
 

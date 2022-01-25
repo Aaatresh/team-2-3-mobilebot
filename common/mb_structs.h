@@ -43,6 +43,14 @@ struct mb_setpoints{
     int manual_ctl;
 };
 
+typedef struct mb_setpoints_LR mb_setpoints_LR_t;
+struct mb_setpoints_LR{
+
+    float left_velocity;
+    float right_velocity;
+
+};
+
 typedef struct mb_odometry mb_odometry_t;
 struct mb_odometry{
 
@@ -59,5 +67,13 @@ struct pid_parameters {
     float dFilterHz;
     float out_lim;
     float int_lim;
+    float int_reset;
+};
+
+typedef struct pid_data pid_data_t;
+struct pid_data {
+    float error; // actual error term
+    float derror; // derivative term
+    float ierror; // integral term
 };
 #endif

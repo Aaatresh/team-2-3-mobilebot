@@ -36,3 +36,25 @@ class WaypointFollower():
         msg.trans_v = 0.0
         msg.angular_v = 0.0
         self.lc.publish("MBOT_MOTOR_COMMAND",msg.encode())
+
+
+lc = lcm.LCM()
+
+for i in range(4):
+    motor_cmd = mbot_motor_command_t()
+    motor_cmd.trans_v = 0.25;
+    motor_cmd.angular_v = 0.0
+    lc.publish("MBOT_MOTOR_COMMAND", motor_cmd.encode())
+    sleep(4.0)
+
+    angular_cmd = mbot_motor_command_t()
+    angular_cmd.trans_v = 0.0
+    angular_cmd.angular_v = -3.14/4;
+    lc.publish("MBOT_MOTOR_COMMAND", angular_cmd.encode())
+    sleep(2.0)
+
+    angular_cmd = mbot_motor_command_t()
+    angular_cmd.trans_v = 0.0
+    angular_cmd.angular_v = 0.0;
+    lc.publish("MBOT_MOTOR_COMMAND", angular_cmd.encode())
+    sleep(0.3)

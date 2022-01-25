@@ -13,6 +13,8 @@
 #include "userdef.h"
 
 
+#define M_PI 3.14159265358979323846
+
 //#define EXT_CAPE  //for use with the MOBILE ROB CAPE VERSIONS BELOW
 //#define MRC_VERSION_1v3
 //#define MRC_VERSION_2v1
@@ -32,7 +34,6 @@
 #define ENCODER_DIR_RIGHT           1
 
 
-
 // USER SPECIFIC CONFIG HERE
 
 #ifdef USER_DEVANSH
@@ -49,8 +50,8 @@
 
 // These rates are set to defaults - can be changed
 #define SAMPLE_RATE_HZ          50   // main filter and control loop speed
-#define DT                      0.02  // 1/sample_rate
-#define PRINTF_HZ               10    // rate of print loop
+#define DT                      1.0 / SAMPLE_RATE_HZ  // 1/sample_rate
+#define PRINTF_HZ               1    // rate of print loop
 #define RC_CTL_HZ               25   // main filter and control loop speed
 #define LCM_HZ                  100    // rate of LCM subscribe
 #define LCM_PRIORITY            60    // priority of LCM thread (lower is less critical)
@@ -70,5 +71,8 @@
 
 #define LED_OFF                 1
 #define LED_ON                  0
+
+// Defs for Odometry
+#define DELTA_THETA_THRESH	    0.001 * SAMPLE_RATE_HZ // (in radians) from the paper (https://drive.google.com/drive/u/1/folders/1yehnW33KBXUHgPebyMbHwfje5KGyXxdj)
 
 #endif
