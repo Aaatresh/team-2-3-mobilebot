@@ -221,15 +221,17 @@ void mobilebot_controller(){
     read_mb_sensors();
 
     /*  call open loop controller  */
-    //mb_controller_update_open_loop(&mb_state, &mb_setpoints);
+    mb_controller_update_open_loop(&mb_state, &mb_setpoints);
 
     /*  call PID controller  */
 
-    mb_controller_update(&mb_state, &mb_setpoints);
+    // mb_controller_update(&mb_state, &mb_setpoints);
 
 	// set motors
 	rc_motor_set(LEFT_MOTOR, mb_state.left_cmd);
 	rc_motor_set(RIGHT_MOTOR, mb_state.right_cmd);
+
+    mb_update_odometry(&mb_odometry, &mb_state); 
 
     publish_mb_msgs();
 
