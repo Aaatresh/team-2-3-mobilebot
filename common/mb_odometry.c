@@ -51,7 +51,9 @@ void mb_update_odometry(mb_odometry_t* mb_odometry, mb_state_t* mb_state){
 	float delta_theta_gyro = data.gyro[2];
 	float delta_G_O = mb_angle_diff_radians(delta_theta_gyro, delta_theta_odo);
 
-	if(abs(delta_G_O) > DELTA_THETA_THRESH && (delta_s_left != 0 && delta_s_right != 0))
+	printf("DGO: %f\tTHRESH: %f\n", delta_G_O, DELTA_THETA_THRESH);
+
+	if(fabs(delta_G_O) > DELTA_THETA_THRESH && (delta_s_left != 0 || delta_s_right != 0))
 		delta_theta = delta_theta_gyro * DT;
 	else
 		delta_theta = delta_theta_odo;
