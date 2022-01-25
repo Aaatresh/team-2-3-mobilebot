@@ -185,7 +185,7 @@ void publish_mb_msgs(){
     for(i=0;i<3;i++){
         imu_msg.tb_angles[i] = mb_state.tb_angles[i];
         imu_msg.accel[i] = mb_state.accel[i];
-        imu_msg.gyro[i] = mb_state.gyro[i];
+        imu_msg.gyro[i] = mb_state.gyro[i]; 
     }
 
     //Create Encoder LCM message
@@ -221,17 +221,17 @@ void mobilebot_controller(){
     read_mb_sensors();
 
     /*  call open loop controller  */
-    mb_controller_update_open_loop(&mb_state, &mb_setpoints);
+    //mb_controller_update_open_loop(&mb_state, &mb_setpoints);
 
     /*  call PID controller  */
 
-    // mb_controller_update(&mb_state, &mb_setpoints);
+     mb_controller_update(&mb_state, &mb_setpoints);
 
 	// set motors
 	rc_motor_set(LEFT_MOTOR, mb_state.left_cmd);
 	rc_motor_set(RIGHT_MOTOR, mb_state.right_cmd);
 
-    mb_update_odometry(&mb_odometry, &mb_state); 
+    //mb_update_odometry(&mb_odometry, &mb_state); 
 
     publish_mb_msgs();
 
@@ -273,6 +273,7 @@ void timesync_handler(const lcm_recv_buf_t * rbuf, const char *channel,
 void motor_command_handler(const lcm_recv_buf_t *rbuf, const char *channel,
                           const mbot_motor_command_t *msg, void *user){
 	mb_setpoints.fwd_velocity = msg->trans_v;
+    printf("%f for some random reason\n", mb_setpoints.fwd_velocity);
 	mb_setpoints.turn_velocity = msg->angular_v;
 
 }
