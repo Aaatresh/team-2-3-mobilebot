@@ -154,13 +154,14 @@ void update_pid_data(float new_error, pid_data_t* pid_data, pid_parameters_t*pid
 	pid_data -> ierror += new_error;
 
 	// reset integrator error if current error is small
+	/*
 	if ((new_error < pid_parameters->int_reset) && (new_error > -pid_parameters->int_reset)) {
         printf("RESETING IERR");
         pid_data->ierror = 0;
     }
-	
+	*/
 	if (pid_data->ierror > pid_parameters->int_lim) pid_data->ierror = pid_parameters->int_lim;
-	if (pid_data->ierror < -pid_parameters->int_lim) pid_data->ierror = -pid_parameters->int_lim;
+	if (pid_data->ierror < -pid_parameters->int_lim) pid_data->ierror = -pid_parameters->int_lim; 
 
 	pid_data -> derror = new_error - pid_data-> error;
 	pid_data -> error = new_error;
@@ -205,6 +206,7 @@ int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){
 			lw_pid_data.ierror
 			);
     */
+    
 	printf("RPID: des: %f, speed: %f,  err %f, derr: %f, ierr: %f\n", 
 			mb_setpoints_LR.right_velocity, 
 			mb_state->right_velocity,
@@ -219,7 +221,7 @@ int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){
 	
 	// send the command
 	mb_state->left_cmd = speed_to_duty_cycle(LEFT_MOTOR, lw_cmd_speed);
-	mb_state->right_cmd = speed_to_duty_cycle(RIGHT_MOTOR, rw_cmd_speed);
+	mb_state->right_cmd = speed_to_duty_cycle(RIGHT_MOTOR, rw_cmd_speed); 
 
 
 	// // Right wheel PID
