@@ -74,6 +74,7 @@ void mb_update_odometry(mb_odometry_t* mb_odometry, mb_state_t* mb_state){
 	else
 		delta_theta = delta_theta_odo;
 		// mb_odometry->theta = mb_odometry->theta + delta_theta_odo;
+
 	
 	float delta_x = delta_s * cos(mb_odometry->theta + (delta_theta / 2.0));
 	float delta_y = delta_s * sin(mb_odometry->theta + (delta_theta / 2.0));

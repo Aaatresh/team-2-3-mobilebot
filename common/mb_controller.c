@@ -147,20 +147,21 @@ int mb_controller_update_open_loop(mb_state_t* mb_state, mb_setpoints_t* mb_setp
 	// mb_state->right_cmd = 0.25;
 
     return 0;
-}
+}                                                         
 
 void update_pid_data(float new_error, pid_data_t* pid_data, pid_parameters_t*pid_parameters){
 
 	pid_data -> ierror += new_error;
 
 	// reset integrator error if current error is small
+	/*
 	if ((new_error < pid_parameters->int_reset) && (new_error > -pid_parameters->int_reset)) {
         // printf("RESETING IERR");
         pid_data->ierror = 0;
     }
-	
+	*/
 	if (pid_data->ierror > pid_parameters->int_lim) pid_data->ierror = pid_parameters->int_lim;
-	if (pid_data->ierror < -pid_parameters->int_lim) pid_data->ierror = -pid_parameters->int_lim;
+	if (pid_data->ierror < -pid_parameters->int_lim) pid_data->ierror = -pid_parameters->int_lim; 
 
 	pid_data -> derror = new_error - pid_data-> error;
 	pid_data -> error = new_error;
@@ -184,6 +185,7 @@ float compute_pid_control(float feedforward, pid_data_t* pid_data, pid_parameter
 int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){  
 
 	mb_setpoints_LR_t mb_setpoints_LR;
+	printf("%f\n", mb_setpoints->fwd_velocity);
 	mb_controller_convert_setpoints_to_setpointsLR(mb_setpoints, &mb_setpoints_LR);
 
 	// mb_state->left_velocity = mb_state->left_encoder_delta / lw_pid_params.dFilterHz;
@@ -205,21 +207,22 @@ int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){
 			lw_pid_data.ierror
 			);
     */
-	/*printf("RPID: des: %f, speed: %f,  err %f, derr: %f, ierr: %f\n", 
+
+	printf("RPID: des: %f, speed: %f,  err %f, derr: %f, ierr: %f\n", 
 			mb_setpoints_LR.right_velocity, 
 			mb_state->right_velocity,
 			rw_pid_data.error,
 			rw_pid_data.derror,
 			rw_pid_data.ierror
 			);
-    */
+    
 	// compute command
 	float lw_cmd_speed = compute_pid_control(mb_setpoints_LR.left_velocity, &lw_pid_data, &lw_pid_params);
 	float rw_cmd_speed = compute_pid_control(mb_setpoints_LR.right_velocity, &rw_pid_data, &rw_pid_params);
 	
 	// send the command
 	mb_state->left_cmd = speed_to_duty_cycle(LEFT_MOTOR, lw_cmd_speed);
-	mb_state->right_cmd = speed_to_duty_cycle(RIGHT_MOTOR, rw_cmd_speed);
+	mb_state->right_cmd = speed_to_duty_cycle(RIGHT_MOTOR, rw_cmd_speed); 
 
 
 	// // Right wheel PID

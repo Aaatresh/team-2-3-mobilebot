@@ -21,3 +21,4 @@ pyvenv.cfg
 lib/*
 share/*
 common/userdef.h
+common/pid.cfg
