@@ -15,10 +15,10 @@
 
 
 
- rc_filter_t low_pass_left = RC_FILTER_INITIALIZER;
- rc_filter_t low_pass_right = RC_FILTER_INITIALIZER; 
- rc_filter_t low_pass_left_enc = RC_FILTER_INITIALIZER;
- rc_filter_t low_pass_right_enc = RC_FILTER_INITIALIZER;
+//  rc_filter_t low_pass_left = RC_FILTER_INITIALIZER;
+//  rc_filter_t low_pass_right = RC_FILTER_INITIALIZER; 
+//  rc_filter_t low_pass_left_enc = RC_FILTER_INITIALIZER;
+//  rc_filter_t low_pass_right_enc = RC_FILTER_INITIALIZER;
  
 
 
@@ -46,11 +46,11 @@ int main(){
 	
     	// initialise low-pass filters
 
-	 rc_filter_first_order_lowpass(&low_pass_left, DT, 0.5);
-	 rc_filter_first_order_lowpass(&low_pass_right, DT, 0.5);
+	//  rc_filter_first_order_lowpass(&low_pass_left, DT, 0.5);
+	//  rc_filter_first_order_lowpass(&low_pass_right, DT, 0.5);
 
-	 rc_filter_first_order_lowpass(&low_pass_left_enc, DT, 0.5);
-	 rc_filter_first_order_lowpass(&low_pass_right_enc, DT, 0.5);
+	//  rc_filter_first_order_lowpass(&low_pass_left_enc, DT, 0.5);
+	//  rc_filter_first_order_lowpass(&low_pass_right_enc, DT, 0.5);
 	
 	 // start control thread
 	printf("starting dsm_radio thread... \n");
@@ -171,9 +171,13 @@ void read_mb_sensors(){
     mb_state.right_encoder_total += mb_state.right_encoder_delta;
 
     // set the left and right wheel velocities
-    mb_state.left_velocity = rc_filter_march(&low_pass_left_enc, enc2meters * mb_state.left_encoder_delta * SAMPLE_RATE_HZ);  
-    mb_state.right_velocity = rc_filter_march(&low_pass_right_enc, enc2meters * mb_state.right_encoder_delta * SAMPLE_RATE_HZ); 
+    // mb_state.left_velocity = rc_filter_march(&low_pass_left_enc, enc2meters * mb_state.left_encoder_delta * SAMPLE_RATE_HZ);  
+    // mb_state.right_velocity = rc_filter_march(&low_pass_right_enc, enc2meters * mb_state.right_encoder_delta * SAMPLE_RATE_HZ); 
     
+    mb_state.left_velocity  = enc2meters * mb_state.left_encoder_delta * SAMPLE_RATE_HZ;  
+    mb_state.right_velocity = enc2meters * mb_state.right_encoder_delta * SAMPLE_RATE_HZ; 
+    
+
     // reset the encoders
     rc_encoder_write(LEFT_MOTOR,0);
     rc_encoder_write(RIGHT_MOTOR,0);
@@ -243,8 +247,11 @@ void mobilebot_controller(){
 
      mb_controller_update(&mb_state, &mb_setpoints);
 
-     float filt_left_cmd = rc_filter_march(&low_pass_left, mb_state.left_cmd);
-     float filt_right_cmd = rc_filter_march(&low_pass_right, mb_state.right_cmd);
+    //  float filt_left_cmd = rc_filter_march(&low_pass_left, mb_state.left_cmd);
+    //  float filt_right_cmd = rc_filter_march(&low_pass_right, mb_state.right_cmd);
+
+     float filt_left_cmd =  mb_state.left_cmd;
+     float filt_right_cmd = mb_state.right_cmd;
 	// set motors
 	rc_motor_set(LEFT_MOTOR, filt_left_cmd);
 	rc_motor_set(RIGHT_MOTOR, filt_right_cmd);
