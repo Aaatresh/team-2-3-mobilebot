@@ -51,7 +51,7 @@
 // These rates are set to defaults - can be changed
 #define SAMPLE_RATE_HZ          50   // main filter and control loop speed
 #define DT                      1.0 / SAMPLE_RATE_HZ  // 1/sample_rate
-#define PRINTF_HZ               1    // rate of print loop
+#define PRINTF_HZ               10    // rate of print loop
 #define RC_CTL_HZ               25   // main filter and control loop speed
 #define LCM_HZ                  100    // rate of LCM subscribe
 #define LCM_PRIORITY            60    // priority of LCM thread (lower is less critical)

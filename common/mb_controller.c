@@ -185,7 +185,7 @@ float compute_pid_control(float feedforward, pid_data_t* pid_data, pid_parameter
 int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){  
 
 	mb_setpoints_LR_t mb_setpoints_LR;
-	printf("%f\n", mb_setpoints->fwd_velocity);
+	// printf("%f\n", mb_setpoints->fwd_velocity);
 	mb_controller_convert_setpoints_to_setpointsLR(mb_setpoints, &mb_setpoints_LR);
 
 	// mb_state->left_velocity = mb_state->left_encoder_delta / lw_pid_params.dFilterHz;
@@ -208,6 +208,7 @@ int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){
 			);
     */
 
+	/*
 	printf("RPID: des: %f, speed: %f,  err %f, derr: %f, ierr: %f\n", 
 			mb_setpoints_LR.right_velocity, 
 			mb_state->right_velocity,
@@ -215,7 +216,7 @@ int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){
 			rw_pid_data.derror,
 			rw_pid_data.ierror
 			);
-    
+    */
 	// compute command
 	float lw_cmd_speed = compute_pid_control(mb_setpoints_LR.left_velocity, &lw_pid_data, &lw_pid_params);
 	float rw_cmd_speed = compute_pid_control(mb_setpoints_LR.right_velocity, &rw_pid_data, &rw_pid_params);
