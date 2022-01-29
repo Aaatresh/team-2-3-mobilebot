@@ -308,7 +308,8 @@ void timesync_handler(const lcm_recv_buf_t * rbuf, const char *channel,
 void motor_command_handler(const lcm_recv_buf_t *rbuf, const char *channel,
                           const mbot_motor_command_t *msg, void *user){
     mb_setpoints.fwd_velocity = rc_filter_march(&low_pass_left_set, msg->trans_v);  
-    mb_setpoints.turn_velocity = rc_filter_march(&low_pass_right_set, msg->angular_v);
+    // mb_setpoints.turn_velocity = rc_filter_march(&low_pass_right_set, msg->angular_v);
+    mb_setpoints.turn_velocity =  msg->angular_v;
 	if(msg->trans_v < mb_setpoints.fwd_velocity){
         mb_setpoints.fwd_velocity = msg->trans_v;
     }
