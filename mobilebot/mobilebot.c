@@ -19,6 +19,10 @@
 //  rc_filter_t low_pass_right = RC_FILTER_INITIALIZER; 
 //  rc_filter_t low_pass_left_enc = RC_FILTER_INITIALIZER;
 //  rc_filter_t low_pass_right_enc = RC_FILTER_INITIALIZER;
+
+rc_filter_t low_pass_left_set = RC_FILTER_INITIALIZER;
+rc_filter_t low_pass_right_set = RC_FILTER_INITIALIZER;
+
  
 
 
@@ -49,8 +53,14 @@ int main(){
 	//  rc_filter_first_order_lowpass(&low_pass_left, DT, 0.5);
 	//  rc_filter_first_order_lowpass(&low_pass_right, DT, 0.5);
 
+
 	//  rc_filter_first_order_lowpass(&low_pass_left_enc, DT, 0.5);
 	//  rc_filter_first_order_lowpass(&low_pass_right_enc, DT, 0.5);
+	//  rc_filter_first_order_lowpass(&low_pass_left_enc, DT, 0.5);
+	//  rc_filter_first_order_lowpass(&low_pass_right_enc, DT, 0.5);
+
+     rc_filter_first_order_lowpass(&low_pass_left_set, DT, 0.5);
+	 rc_filter_first_order_lowpass(&low_pass_right_set, DT, 0.5);
 	
 	 // start control thread
 	printf("starting dsm_radio thread... \n");
@@ -297,9 +307,15 @@ void timesync_handler(const lcm_recv_buf_t * rbuf, const char *channel,
 *******************************************************************************/
 void motor_command_handler(const lcm_recv_buf_t *rbuf, const char *channel,
                           const mbot_motor_command_t *msg, void *user){
-	mb_setpoints.fwd_velocity = msg->trans_v;
+    mb_setpoints.fwd_velocity = rc_filter_march(&low_pass_left_set, msg->trans_v);  
+    mb_setpoints.turn_velocity = rc_filter_march(&low_pass_right_set, msg->angular_v);
+	if(msg->trans_v < mb_setpoints.fwd_velocity){
+        mb_setpoints.fwd_velocity = msg->trans_v;
+    }
+
+    //mb_setpoints.fwd_velocity = msg->trans_v;
     // printf("%f for some random reason\n", mb_setpoints.fwd_velocity);
-	mb_setpoints.turn_velocity = msg->angular_v;
+	//mb_setpoints.turn_velocity = msg->angular_v;
 
 }
 
