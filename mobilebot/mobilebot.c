@@ -78,7 +78,7 @@ int main(){
 
     #ifdef PRINT_MODE_FILE
        
-       fp = fopen("log.txt", "w+");
+       fp = fopen("log_0.25_pi_4.txt", "w+");
         // start printf_thread 
         printf("starting print to file thread... \n");
         fprintf(fp,"IMU θ,");
