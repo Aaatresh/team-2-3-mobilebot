@@ -88,7 +88,9 @@ int main(){
         fprintf(fp,"Y,");
         fprintf(fp,"θ,");
         fprintf(fp,"FWD,");
-        fprintf(fp,"TURN");
+        fprintf(fp,"TURN,");
+	fprintf(fp,"MEAS_VEL_L,");
+	fprintf(fp, "MEAS_VEL_R");
         fprintf(fp,"\n");
         pthread_t  printf_file_thread;
         rc_pthread_create(&printf_file_thread, printf_file_loop, (void*) NULL, SCHED_OTHER, 0);
@@ -518,7 +520,9 @@ void* printf_file_loop(void* ptr){
 			fprintf(fp, "%7.3f,", mb_odometry.y);
 			fprintf(fp, "%7.3f,", mb_odometry.theta);
 			fprintf(fp, "%7.3f,", mb_setpoints.fwd_velocity);
-            fprintf(fp, "%7.3f", mb_setpoints.turn_velocity);
+            		fprintf(fp, "%7.3f,", mb_setpoints.turn_velocity);
+			fprintf(fp, "%7.3f,", mb_state.left_velocity);
+			fprintf(fp, "%7.3f",  mb_state.right_velocity);
 
 			// fflush(stdout);
             fprintf(fp, "\n");
