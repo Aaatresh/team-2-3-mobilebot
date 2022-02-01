@@ -16,6 +16,8 @@ plt.title("Robot's path through the maze at 0.25m/s fwd vel. and 0.785rad/s turn
 plt.xlabel("x position")
 plt.ylabel("y position")
 plt.plot(my_data[:,3], my_data[:,4])
+axes = plt.gca()
+axes.set_aspect("equal")
 plt.show()
 
 # plt.savefig("path.png")
