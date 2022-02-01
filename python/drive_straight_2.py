@@ -4,7 +4,7 @@ from time import sleep
 import sys
 import time
 sys.path.append("lcmtypes")
-
+import numpy as np
 from lcmtypes import mbot_encoder_t
 from lcmtypes import mbot_imu_t
 from lcmtypes import mbot_motor_command_t
@@ -30,11 +30,11 @@ stop_cmd.angular_v = 0.0;
 lc.publish("MBOT_MOTOR_COMMAND", stop_cmd.encode())
 
 motor_cmd = mbot_motor_command_t()
-motor_cmd.trans_v = 1.0;
-motor_cmd.angular_v = 0.0
+motor_cmd.trans_v = 0.0;
+motor_cmd.angular_v = np.pi;
 
 
-while time.time() - t0 <= 1.0:
+while time.time() - t0 <= 2.0:
     lc.publish("MBOT_MOTOR_COMMAND", motor_cmd.encode())
     sleep(0.01)
 
