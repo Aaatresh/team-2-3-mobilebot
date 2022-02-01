@@ -22,6 +22,9 @@ double speed_to_duty_cycle(int ch, double speed);
 * rc_filter_t fwd_vel_sp_lpf;
 *************/
 
+// rc_filter_t low_pass_left_filt = RC_FILTER_INITIALIZER;
+// rc_filter_t low_pass_right_filt  = RC_FILTER_INITIALIZER; 
+
 /***********
 * For each PID filter you want to load from settings
 * add a pid_parameter_t or filter_parameter_t

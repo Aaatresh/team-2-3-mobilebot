@@ -12,6 +12,11 @@
 
 int mb_initialize_controller(){
     mb_load_controller_config();
+
+		// initialise low-pass filters
+		// rc_filter_first_order_lowpass(&low_pass_left_filt, DT, 0.5);
+	 	// rc_filter_first_order_lowpass(&low_pass_right_filt, DT, 0.5);
+		
     return 0;
 }
 
@@ -191,9 +196,17 @@ int mb_controller_update(mb_state_t* mb_state, mb_setpoints_t* mb_setpoints){
 	// mb_state->left_velocity = mb_state->left_encoder_delta / lw_pid_params.dFilterHz;
 	// mb_state->right_velocity = mb_state->right_encoder_delta / rw_pid_params.dFilterHz;
 
-	// compute errors
-	float lw_error = mb_state->left_velocity - mb_setpoints_LR.left_velocity;
-	float rw_error = mb_state->right_velocity - mb_setpoints_LR.right_velocity;
+	// compute errors, but low-pass filter the left and right commands
+
+	// float low_pass_left_cmd = rc_filter_march(&low_pass_left_filt, mb_setpoints_LR.left_velocity);
+	// float low_pass_right_cmd = rc_filter_march(&low_pass_right_filt, mb_setpoints_LR.right_velocity);
+
+	float low_pass_left_cmd =  mb_setpoints_LR.left_velocity;
+	float low_pass_right_cmd = mb_setpoints_LR.right_velocity;
+
+	float lw_error = mb_state->left_velocity - low_pass_left_cmd;
+	float rw_error = mb_state->right_velocity - low_pass_right_cmd;
+	
 
 	// Update the pid data struct
 	update_pid_data(lw_error, &lw_pid_data, &lw_pid_params);

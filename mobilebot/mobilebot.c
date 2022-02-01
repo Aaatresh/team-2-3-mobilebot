@@ -15,12 +15,14 @@
 
 
 
- rc_filter_t low_pass_left = RC_FILTER_INITIALIZER;
- rc_filter_t low_pass_right = RC_FILTER_INITIALIZER; 
- rc_filter_t low_pass_left_enc = RC_FILTER_INITIALIZER;
- rc_filter_t low_pass_right_enc = RC_FILTER_INITIALIZER;
- rc_filter_t low_pass_left_set = RC_FILTER_INITIALIZER;
- rc_filter_t low_pass_right_set = RC_FILTER_INITIALIZER;
+//  rc_filter_t low_pass_left = RC_FILTER_INITIALIZER;
+//  rc_filter_t low_pass_right = RC_FILTER_INITIALIZER; 
+//  rc_filter_t low_pass_left_enc = RC_FILTER_INITIALIZER;
+//  rc_filter_t low_pass_right_enc = RC_FILTER_INITIALIZER;
+
+rc_filter_t low_pass_left_set = RC_FILTER_INITIALIZER;
+rc_filter_t low_pass_right_set = RC_FILTER_INITIALIZER;
+
  
 
 
@@ -48,11 +50,14 @@ int main(){
 	
     	// initialise low-pass filters
 
-	 rc_filter_first_order_lowpass(&low_pass_left, DT, 0.5);
-	 rc_filter_first_order_lowpass(&low_pass_right, DT, 0.5);
+	//  rc_filter_first_order_lowpass(&low_pass_left, DT, 0.5);
+	//  rc_filter_first_order_lowpass(&low_pass_right, DT, 0.5);
 
-	 rc_filter_first_order_lowpass(&low_pass_left_enc, DT, 0.5);
-	 rc_filter_first_order_lowpass(&low_pass_right_enc, DT, 0.5);
+
+	//  rc_filter_first_order_lowpass(&low_pass_left_enc, DT, 0.5);
+	//  rc_filter_first_order_lowpass(&low_pass_right_enc, DT, 0.5);
+	//  rc_filter_first_order_lowpass(&low_pass_left_enc, DT, 0.5);
+	//  rc_filter_first_order_lowpass(&low_pass_right_enc, DT, 0.5);
 
      rc_filter_first_order_lowpass(&low_pass_left_set, DT, 0.5);
 	 rc_filter_first_order_lowpass(&low_pass_right_set, DT, 0.5);
@@ -62,10 +67,36 @@ int main(){
 	pthread_t  dsm_radio_thread;
 	rc_pthread_create(&dsm_radio_thread, dsm_radio_control_loop, (void*) NULL, SCHED_OTHER, 0);
 
-    // start printf_thread 
-    printf("starting print thread... \n");
-    pthread_t  printf_thread;
-    rc_pthread_create(&printf_thread, printf_loop, (void*) NULL, SCHED_OTHER, 0);
+
+    #ifdef PRINT_MODE_CONSOLE
+        // start printf_thread 
+        printf("starting print to console thread... \n");
+        pthread_t  printf_thread;
+        rc_pthread_create(&printf_thread, printf_loop, (void*) NULL, SCHED_OTHER, 0);
+    #endif
+
+
+    #ifdef PRINT_MODE_FILE
+       
+       fp = fopen("log.txt", "w+");
+        // start printf_thread 
+        printf("starting print to file thread... \n");
+        fprintf(fp,"IMU θ,");
+        fprintf(fp,"L_ENC,");
+        fprintf(fp,"R_ENC,");
+        fprintf(fp,"X,");
+        fprintf(fp,"Y,");
+        fprintf(fp,"θ,");
+        fprintf(fp,"FWD,");
+        fprintf(fp,"TURN,");
+	fprintf(fp,"MEAS_VEL_L,");
+	fprintf(fp, "MEAS_VEL_R");
+        fprintf(fp,"\n");
+        pthread_t  printf_file_thread;
+        rc_pthread_create(&printf_file_thread, printf_file_loop, (void*) NULL, SCHED_OTHER, 0);
+    #endif
+
+
     
     //wait for threads to set up
     rc_nanosleep(1E5);
@@ -130,7 +161,12 @@ int main(){
 	rc_led_set(RC_LED_RED, LED_ON);
 	// exit cleanly
     rc_pthread_timed_join(lcm_subscribe_thread, NULL, 1.5);
-    rc_pthread_timed_join(printf_thread, NULL, 1.5);
+    #ifdef PRINT_MODE_FILE
+        rc_pthread_timed_join(printf_file_thread, NULL, 1.5);
+    #endif
+    #ifdef PRINT_MODE_CONSOLE
+        rc_pthread_timed_join(printf_thread, NULL, 1.5);
+    #endif
     rc_pthread_timed_join(dsm_radio_thread, NULL, 1.5);
     rc_led_set(RC_LED_GREEN, LED_OFF);
     rc_led_set(RC_LED_RED, LED_OFF);
@@ -143,6 +179,9 @@ int main(){
 #endif
     rc_encoder_cleanup();
     rc_remove_pid_file();
+    #ifdef PRINT_MODE_FILE
+    fclose(fp);
+    #endif
 	return 0;
 }
 
@@ -176,9 +215,13 @@ void read_mb_sensors(){
     mb_state.right_encoder_total += mb_state.right_encoder_delta;
 
     // set the left and right wheel velocities
-    mb_state.left_velocity = rc_filter_march(&low_pass_left_enc, enc2meters * mb_state.left_encoder_delta * SAMPLE_RATE_HZ);  
-    mb_state.right_velocity = rc_filter_march(&low_pass_right_enc, enc2meters * mb_state.right_encoder_delta * SAMPLE_RATE_HZ); 
+    // mb_state.left_velocity = rc_filter_march(&low_pass_left_enc, enc2meters * mb_state.left_encoder_delta * SAMPLE_RATE_HZ);  
+    // mb_state.right_velocity = rc_filter_march(&low_pass_right_enc, enc2meters * mb_state.right_encoder_delta * SAMPLE_RATE_HZ); 
     
+    mb_state.left_velocity  = enc2meters * mb_state.left_encoder_delta * SAMPLE_RATE_HZ;  
+    mb_state.right_velocity = enc2meters * mb_state.right_encoder_delta * SAMPLE_RATE_HZ; 
+    
+
     // reset the encoders
     rc_encoder_write(LEFT_MOTOR,0);
     rc_encoder_write(RIGHT_MOTOR,0);
@@ -248,8 +291,11 @@ void mobilebot_controller(){
 
      mb_controller_update(&mb_state, &mb_setpoints);
 
-     float filt_left_cmd = rc_filter_march(&low_pass_left, mb_state.left_cmd);
-     float filt_right_cmd = rc_filter_march(&low_pass_right, mb_state.right_cmd);
+    //  float filt_left_cmd = rc_filter_march(&low_pass_left, mb_state.left_cmd);
+    //  float filt_right_cmd = rc_filter_march(&low_pass_right, mb_state.right_cmd);
+
+     float filt_left_cmd =  mb_state.left_cmd;
+     float filt_right_cmd = mb_state.right_cmd;
 	// set motors
 	rc_motor_set(LEFT_MOTOR, filt_left_cmd);
 	rc_motor_set(RIGHT_MOTOR, filt_right_cmd);
@@ -296,7 +342,8 @@ void timesync_handler(const lcm_recv_buf_t * rbuf, const char *channel,
 void motor_command_handler(const lcm_recv_buf_t *rbuf, const char *channel,
                           const mbot_motor_command_t *msg, void *user){
     mb_setpoints.fwd_velocity = rc_filter_march(&low_pass_left_set, msg->trans_v);  
-    mb_setpoints.turn_velocity = rc_filter_march(&low_pass_right_set, msg->angular_v);
+    // mb_setpoints.turn_velocity = rc_filter_march(&low_pass_right_set, msg->angular_v);
+    mb_setpoints.turn_velocity =  msg->angular_v;
 	if(msg->trans_v < mb_setpoints.fwd_velocity){
         mb_setpoints.fwd_velocity = msg->trans_v;
     }
@@ -443,6 +490,49 @@ void* printf_loop(void* ptr){
 		rc_nanosleep(1E9 / PRINTF_HZ);
 	}
 	return NULL;
+} 
+
+
+/*******************************************************************************
+* printf_file_loop() 
+*
+* prints diagnostics to console
+* this only gets started if executing from terminal
+*
+* TODO: Add other data to help you tune/debug your code
+*******************************************************************************/
+void* printf_file_loop(void* ptr){
+
+
+	rc_state_t new_state; // keep track of last state
+	while(rc_get_state()!=EXITING){
+		new_state = rc_get_state();
+		
+        #ifdef PRINT_MODE_FILE
+		
+		if(new_state == RUNNING){
+            // fprintf(fp, "\r");
+			//Add Print stattements here, do not follow with /n
+			fprintf(fp, "%7.3f,", mb_state.tb_angles[2]);
+			fprintf(fp, "%7lld,", mb_state.left_encoder_total);
+			fprintf(fp, "%7lld,", mb_state.right_encoder_total);
+			fprintf(fp, "%7.3f,", mb_odometry.x);
+			fprintf(fp, "%7.3f,", mb_odometry.y);
+			fprintf(fp, "%7.3f,", mb_odometry.theta);
+			fprintf(fp, "%7.3f,", mb_setpoints.fwd_velocity);
+            		fprintf(fp, "%7.3f,", mb_setpoints.turn_velocity);
+			fprintf(fp, "%7.3f,", mb_state.left_velocity);
+			fprintf(fp, "%7.3f",  mb_state.right_velocity);
+
+			// fflush(stdout);
+            fprintf(fp, "\n");
+		}
+        #endif
+		rc_nanosleep(1E9 / PRINTF_HZ);
+	}
+
+	return NULL;
+    
 } 
 
 

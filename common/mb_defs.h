@@ -75,4 +75,11 @@
 // Defs for Odometry
 #define DELTA_THETA_THRESH	    0.001 * SAMPLE_RATE_HZ // (in radians) from the paper (https://drive.google.com/drive/u/1/folders/1yehnW33KBXUHgPebyMbHwfje5KGyXxdj)
 
+
+// 
+//#define PRINT_MODE_CONSOLE 
+#define PRINT_MODE_FILE
+
+
+
 #endif
