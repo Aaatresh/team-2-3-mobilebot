@@ -92,7 +92,7 @@ void mb_update_odometry(mb_odometry_t* mb_odometry, mb_state_t* mb_state){
 	odo_msg.utime = now;
 
 	// printf("PUBLISHING ODOM WITH TIME %i\n", odo_msg.utime);
-	// odometry_t_publish(lcm, ODOMETRY_CHANNEL, &odo_msg);
+	odometry_t_publish(lcm, ODOMETRY_CHANNEL, &odo_msg);
 }
 
 
