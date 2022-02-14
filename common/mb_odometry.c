@@ -89,6 +89,7 @@ void mb_update_odometry(mb_odometry_t* mb_odometry, mb_state_t* mb_state){
 	odo_msg.x = mb_odometry->x;
 	odo_msg.y = mb_odometry->y;
 	odo_msg.theta = mb_odometry->theta;
+	odo_msg.utime = now;
 
 	odometry_t_publish(lcm, ODOMETRY_CHANNEL, &odo_msg);
 }
