@@ -240,7 +240,7 @@ void read_mb_sensors(){
 void publish_mb_msgs(){
     mbot_imu_t imu_msg;
     mbot_encoder_t encoder_msg;
-//  odometry_t odo_msg;
+    // odometry_t odo_msg;
 
     //Create IMU LCM Message
     imu_msg.utime = now;
@@ -264,7 +264,7 @@ void publish_mb_msgs(){
     //publish IMU & Encoder Data to LCM
     mbot_imu_t_publish(lcm, MBOT_IMU_CHANNEL, &imu_msg);
     mbot_encoder_t_publish(lcm, MBOT_ENCODER_CHANNEL, &encoder_msg);
-//  odometry_t_publish(lcm, ODOMETRY_CHANNEL, &odo_msg);
+    // odometry_t_publish(lcm, ODOMETRY_CHANNEL, &odo_msg);
 }
 
 /*******************************************************************************
