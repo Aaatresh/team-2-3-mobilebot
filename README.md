@@ -1,7 +1,10 @@
 # ROB-550: BotLab, Team 5
 
 ## Description
-This repository is the MobileBot section of the code base of the BotLab project in the ROB-550 course. At a high level, running this on a Beagle Bone Blue board allows low level control algorithms to be deployed and tested on a 2 DOF wheeled robot (MBot). 
+This repository is the MobileBot section of the code base of the BotLab project in the ROB-550 course. At a high level, running this on a Beagle Bone Blue 
+board allows low level control algorithms to be deployed and tested on a 2 DOF wheeled robot (MBot). 
+
+The BotLab repository that makes up the other half of this code base can be found [here](https://github.com/Aaatresh/team-2-3-botlab).
 
 ## Getting Started
 
