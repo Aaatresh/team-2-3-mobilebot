@@ -1,21 +1,23 @@
-/*******************************************************************************
-*                 Mobilebot Template Code for MBot/MBot-Mini
-*                           pgaskell@umich.edu
-*       
-*    This code is a template for completing a fully featured
-*    mobile robot controller
-*   
-*    Functions that need completing are marked with "TODO:"
-*
-*******************************************************************************/
+# ROB-550: BotLab, Team 5
 
-bin/			      : Binaries folder
-mobilebot/mobilebot.c/.h      : Main setup and threads
-test_motors/test_motors.c/.h  : Program to test motor implementation
-meas..params/meas..params.c/.h: Program to measure motor parameters
-common/mb_controller.c/.h     : Contoller for manual and autonomous nav
-common/mb_defs.h              : Define hardware config
-common/mb_odometry.c/.h	      : Odometry and dead reckoning 
-lcmtypes/                     : lcmtypes for Mobilebot
-java/                         : java build folder for lcmtypes for lcm-spy
-setenv.sh                     : sets up java PATH variables for lcm-spy (run with: source setenv.sh)
+## Description
+This repository is the MobileBot section of the code base of the BotLab project in the ROB-550 course. At a high level, running this on a Beagle Bone Blue board allows low level control algorithms to be deployed and tested on a 2 DOF wheeled robot (MBot). 
+
+## Getting Started
+
+### Dependencies
+* Python 2.7
+* C++
+
+### Installing
+```
+  git clone git@github.com:Aaatresh/team-2-3-mobilebot.git
+```
+
+### Executing the code
+Run ```mobilebot/mobilebot.c``` to take forward and rotational velocity commands and perform low level control operations. Sensor data is read and odometry data is calculated, before both being published. 
+
+## Contributors
+* Anirudh Ashok Aatresh ([aaatresh@umich.edu](mailto:aaatresh@umich.edu))
+* Devansh Agrawal ([devansh@umich.edu](mailto:devansh@umich.edu))
+* Shreya Phirke ([sphirke@umich.edu](mailto:sphirke@umich.edu))
